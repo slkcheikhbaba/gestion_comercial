@@ -1,0 +1,68 @@
+# ========================
+# Eclipse
+# ========================
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+*.tmp
+*.bak
+*.swp
+*~.nib
+.loadpath
+
+# ========================
+# Maven
+# ========================
+target/
+*.jar
+*.war
+*.ear
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+
+# ========================
+# IntelliJ IDEA
+# ========================
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# ========================
+# Système
+# ========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ========================
+# Logs et temporaires
+# ========================
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+*.temp
+
+# ========================
+# Java
+# ========================
+*.class
+hs_err_pid*
+
+# ========================
+# Dépendances JAR
+# ========================
+# Les JARs doivent être gérés par Maven via pom.xml
+*.jar
+!src/main/resources/lib/*.jar  # Exception si vous avez besoin de JARs spécifiques
