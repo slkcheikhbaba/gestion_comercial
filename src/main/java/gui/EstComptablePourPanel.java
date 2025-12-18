@@ -4,10 +4,13 @@ import dao.EstComptablePourDAO;
 import dao.PersonneDAO;
 import model.EstComptablePour;
 import model.Personne;
+import util.PdfExporter;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,9 +19,9 @@ public class EstComptablePourPanel extends JPanel {
 
     private JTable table;
     private DefaultTableModel model;
-    private JTextField txtTypeEntite, txtIdEntite, txtDateDebut, txtSearch;
+    private JTextField txtIdEntite, txtDateDebut, txtSearch;
     private JComboBox<String> comboPersonne, comboTypeEntite;
-    private JButton btnAjouter, btnModifier, btnEnregistrer, btnSupprimer, btnRechercher, btnActualiser;
+    private JButton btnAjouter, btnModifier, btnEnregistrer, btnSupprimer, btnRechercher, btnActualiser, btnExportPdf;
     private EstComptablePourDAO comptablePourDAO = new EstComptablePourDAO();
     private PersonneDAO personneDAO = new PersonneDAO();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -125,6 +128,7 @@ public class EstComptablePourPanel extends JPanel {
         btnEnregistrer = createButton("💾 ENREGISTRER", new Color(255, 140, 0));
         btnSupprimer = createButton("🗑️ SUPPRIMER", new Color(220, 20, 60));
         btnActualiser = createButton("🔄 ACTUALISER", new Color(138, 43, 226));
+        btnExportPdf = createButton("📄 EXPORT PDF", new Color(139, 0, 139));
         
         // Panel recherche
         JPanel searchPanel = new JPanel(new BorderLayout(5, 5));
@@ -148,6 +152,8 @@ public class EstComptablePourPanel extends JPanel {
         buttonPanel.add(btnSupprimer);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(btnActualiser);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        buttonPanel.add(btnExportPdf);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         buttonPanel.add(searchPanel);
         
@@ -160,6 +166,7 @@ public class EstComptablePourPanel extends JPanel {
         btnSupprimer.addActionListener(e -> supprimerLien());
         btnRechercher.addActionListener(e -> chercherLien());
         btnActualiser.addActionListener(e -> actualiserTableau());
+        btnExportPdf.addActionListener(e -> exporterEnPDF());
         
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -495,6 +502,59 @@ public class EstComptablePourPanel extends JPanel {
         isEditMode = false;
         currentEditId = null;
         mettreAJourBoutons();
+    }
+    
+    private void exporterEnPDF() {
+        List<EstComptablePour> liens = getLiensComptablesPour();
+        if (liens.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Aucune donnée à exporter",
+                "Export PDF",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Exporter en PDF");
+        fileChooser.setSelectedFile(new File("comptables_pour_entites_export.pdf"));
+        
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String filePath = fileToSave.getAbsolutePath();
+            
+            if (!filePath.toLowerCase().endsWith(".pdf")) {
+                filePath += ".pdf";
+            }
+            
+            try {
+                PdfExporter.exportListToPdf(liens, filePath);
+                
+                JOptionPane.showMessageDialog(this,
+                    "Export PDF réussi !\nFichier : " + filePath,
+                    "Export PDF",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                // Ouvrir le fichier si demandé
+                int openFile = JOptionPane.showConfirmDialog(this,
+                    "Voulez-vous ouvrir le fichier PDF ?",
+                    "Ouvrir PDF",
+                    JOptionPane.YES_NO_OPTION);
+                
+                if (openFile == JOptionPane.YES_OPTION) {
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().open(new File(filePath));
+                    }
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this,
+                    "Erreur lors de l'export PDF : " + e.getMessage(),
+                    "Erreur Export",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
     
     private void chargerDonnees() {

@@ -22,11 +22,18 @@ public class Fenetre extends JFrame {
         JMenuItem miVilles = new JMenuItem("Gérer les villes");
         JMenuItem miAgences = new JMenuItem("Gérer les agences");
         JMenuItem miExploitations = new JMenuItem("Gérer les exploitations");
+        JMenuItem miDirections = new JMenuItem("Gérer les directions");
+        JMenuItem miComptablesDans = new JMenuItem("Gérer les comptables dans agences");
+        JMenuItem miComptablesPour = new JMenuItem("Gérer les comptables pour entités");
 
         mData.add(miPersonnes);
         mData.add(miVilles);
         mData.add(miAgences);
         mData.add(miExploitations);
+        mData.add(new JSeparator());
+        mData.add(miDirections);
+        mData.add(miComptablesDans);
+        mData.add(miComptablesPour);
         mData.addSeparator();
         mData.add(miExplorer);
 
@@ -47,6 +54,9 @@ public class Fenetre extends JFrame {
         tabbedPane.addTab("Agences", new AgencePanel());
         tabbedPane.addTab("Villes", new VillePanel());
         tabbedPane.addTab("Exploitations", new ExploitationPanel());
+        tabbedPane.addTab("Directions", new DirigePanel());
+        tabbedPane.addTab("Comptables dans agences", new EstComptableDansPanel());
+        tabbedPane.addTab("Comptables pour entités", new EstComptablePourPanel());
 
         setContentPane(tabbedPane);
 
@@ -64,11 +74,22 @@ public class Fenetre extends JFrame {
         miAgences.addActionListener(e -> tabbedPane.setSelectedIndex(2));
         miVilles.addActionListener(e -> tabbedPane.setSelectedIndex(3));
         miExploitations.addActionListener(e -> tabbedPane.setSelectedIndex(4));
+        miDirections.addActionListener(e -> tabbedPane.setSelectedIndex(5));
+        miComptablesDans.addActionListener(e -> tabbedPane.setSelectedIndex(6));
+        miComptablesPour.addActionListener(e -> tabbedPane.setSelectedIndex(7));
 
         miAbout.addActionListener(e -> JOptionPane.showMessageDialog(this,
                 "Application de Gestion Commerciale\n" +
                 "Version 1.0\n" +
-                "Développée avec Java Swing et PostgreSQL",
+                "Développée avec Java Swing et PostgreSQL\n\n" +
+                "Tables disponibles:\n" +
+                "• Personnes\n" +
+                "• Villes\n" +
+                "• Agences\n" +
+                "• Exploitations\n" +
+                "• Directions\n" +
+                "• Comptables dans agences\n" +
+                "• Comptables pour entités",
                 "À propos", JOptionPane.INFORMATION_MESSAGE));
 
         // ✅ Vérifier la connexion au démarrage
@@ -86,16 +107,21 @@ public class Fenetre extends JFrame {
         JLabel subtitleLabel = new JLabel("Gestion complète de votre activité commerciale", SwingConstants.CENTER);
         subtitleLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
-        JPanel infoPanel = new JPanel(new GridLayout(5, 1, 10, 10));
+        JPanel infoPanel = new JPanel(new GridLayout(9, 1, 10, 10));
         infoPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
         infoPanel.add(new JLabel("✓ Gestion des personnes (clients, employés)"));
         infoPanel.add(new JLabel("✓ Gestion des villes et agences"));
         infoPanel.add(new JLabel("✓ Gestion des exploitations"));
+        infoPanel.add(new JLabel("✓ Gestion des directions"));
+        infoPanel.add(new JLabel("✓ Gestion des comptables dans les agences"));
+        infoPanel.add(new JLabel("✓ Gestion des comptables pour les entités"));
         infoPanel.add(new JLabel("✓ Recherche et export de données"));
         infoPanel.add(new JLabel("✓ Export PDF pour tous les enregistrements"));
+        infoPanel.add(new JLabel("✓ Interface intuitive avec onglets"));
 
-        JPanel buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        
         JButton quickAccessBtn = new JButton("Accéder à l'explorateur de données");
         quickAccessBtn.addActionListener(e -> {
             SearchExplorerPanel explorer = new SearchExplorerPanel();
@@ -105,12 +131,31 @@ public class Fenetre extends JFrame {
             dlg.setLocationRelativeTo(this);
             dlg.setVisible(true);
         });
+        
+        JButton statsBtn = new JButton("Voir les statistiques");
+        statsBtn.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this,
+                "Statistiques de l'application:\n\n" +
+                "• 7 tables de données disponibles\n" +
+                "• Interface en onglets pour navigation facile\n" +
+                "• Export PDF pour toutes les tables\n" +
+                "• Recherche avancée dans toutes les données\n" +
+                "• Connexion PostgreSQL avec Hibernate",
+                "Statistiques", JOptionPane.INFORMATION_MESSAGE);
+        });
+        
         buttonPanel.add(quickAccessBtn);
+        buttonPanel.add(statsBtn);
+
+        // Panel d'accueil organisé
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(subtitleLabel, BorderLayout.NORTH);
+        centerPanel.add(infoPanel, BorderLayout.CENTER);
+        centerPanel.add(buttonPanel, BorderLayout.SOUTH);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         panel.add(titleLabel, BorderLayout.NORTH);
-        panel.add(subtitleLabel, BorderLayout.CENTER);
-        panel.add(infoPanel, BorderLayout.SOUTH);
-        panel.add(buttonPanel, BorderLayout.SOUTH);
+        panel.add(centerPanel, BorderLayout.CENTER);
 
         return panel;
     }

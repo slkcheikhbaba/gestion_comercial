@@ -1,11 +1,14 @@
 package model;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "personnes")
-public class Personne {
+@Table(name = "personnes", schema = "public")
+public class Personne implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +29,9 @@ public class Personne {
     private String telephone;
     
     // Constructeurs
-    public Personne() {}
+    public Personne() {
+        // Constructeur par défaut requis par JPA
+    }
     
     public Personne(String nom, String prenom, Date dateNaissance) {
         this.nom = nom;

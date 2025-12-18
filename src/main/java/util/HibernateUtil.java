@@ -2,43 +2,62 @@ package util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import model.*;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtil {
-
-    private static final SessionFactory sessionFactory = buildSessionFactory();
-
-    private static SessionFactory buildSessionFactory() {
-        try {
-            Configuration configuration = new Configuration()
-                    .configure("hibernate.cfg.xml")
-                    .addAnnotatedClass(Personne.class)
-                    .addAnnotatedClass(Ville.class)
-                    .addAnnotatedClass(Agence.class)
-                    .addAnnotatedClass(Exploitation.class)
-                    .addAnnotatedClass(Dirige.class)
-                    .addAnnotatedClass(EstComptablePour.class)
-                    .addAnnotatedClass(EstComptableDans.class);
-
-            SessionFactory factory = configuration.buildSessionFactory();
-            System.out.println("✅ Hibernate SessionFactory créée avec succès");
-            return factory;
-
-        } catch (Throwable ex) {
-            System.err.println("❌ Échec de création de SessionFactory : " + ex.getMessage());
-            ex.printStackTrace();
-            throw new ExceptionInInitializerError("Erreur Hibernate : " + ex.getMessage());
-        }
-    }
-
+    
+    private static SessionFactory sessionFactory;
+    
     public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            try {
+                // Configuration Hibernate
+                Configuration configuration = new Configuration();
+                
+                // Paramètres de base de données
+                configuration.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
+                configuration.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/gestion_commerciale");
+                configuration.setProperty("hibernate.connection.username", "postgres");
+                configuration.setProperty("hibernate.connection.password", "7968");
+                
+                // Paramètres Hibernate
+                configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+                configuration.setProperty("hibernate.show_sql", "true");
+                configuration.setProperty("hibernate.format_sql", "true");
+                configuration.setProperty("hibernate.hbm2ddl.auto", "update");
+                
+                // Ajout des classes annotées
+                configuration.addAnnotatedClass(model.Personne.class);
+                configuration.addAnnotatedClass(model.Ville.class);
+                configuration.addAnnotatedClass(model.Agence.class);
+                configuration.addAnnotatedClass(model.Exploitation.class);
+                configuration.addAnnotatedClass(model.Dirige.class);
+                configuration.addAnnotatedClass(model.EstComptablePour.class);
+                configuration.addAnnotatedClass(model.EstComptableDans.class);
+                
+                // Création de SessionFactory
+                ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties())
+                    .build();
+                
+                sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+                
+                System.out.println("✅ Hibernate SessionFactory créée avec succès");
+                
+            } catch (Exception e) {
+                System.err.println("❌ Échec création SessionFactory : " + e.getMessage());
+                e.printStackTrace();
+                throw new ExceptionInInitializerError(e);
+            }
+        }
         return sessionFactory;
     }
-
+    
     public static void shutdown() {
         if (sessionFactory != null) {
             sessionFactory.close();
-            System.out.println("✅ Hibernate SessionFactory fermée proprement");
+            System.out.println("✅ Hibernate SessionFactory fermée");
         }
     }
 }

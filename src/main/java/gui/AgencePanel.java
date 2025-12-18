@@ -2,18 +2,21 @@ package gui;
 
 import dao.AgenceDAO;
 import model.Agence;
+import util.PdfExporter;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.File;
 import java.util.List;
 
 public class AgencePanel extends JPanel {
 
     private JTable table;
     private DefaultTableModel model;
-    private JTextField txtNom, txtAdresse, txtTelephone, txtEmail, txtVille, txtSearch;
-    private JButton btnAjouter, btnModifier, btnEnregistrer, btnSupprimer, btnRechercher, btnActualiser;
+    private JTextField txtNom, txtAdresse, txtTelephone, txtEmail, txtVille;
+    private JButton btnAjouter, btnModifier, btnEnregistrer, btnSupprimer, btnActualiser, btnExportPdf;
     private AgenceDAO agenceDAO = new AgenceDAO();
     private boolean isEditMode = false;
     private Long currentEditId = null;
@@ -119,18 +122,7 @@ public class AgencePanel extends JPanel {
         btnEnregistrer = createButton("💾 ENREGISTRER", new Color(255, 140, 0));
         btnSupprimer = createButton("🗑️ SUPPRIMER", new Color(220, 20, 60));
         btnActualiser = createButton("🔄 ACTUALISER", new Color(138, 43, 226));
-        
-        // Panel recherche
-        JPanel searchPanel = new JPanel(new BorderLayout(5, 5));
-        searchPanel.setBorder(BorderFactory.createTitledBorder("Recherche"));
-        searchPanel.setBackground(Color.WHITE);
-        
-        txtSearch = new JTextField();
-        txtSearch.setFont(new Font("Arial", Font.PLAIN, 12));
-        btnRechercher = createButton("🔍 RECHERCHER", new Color(32, 178, 170));
-        
-        searchPanel.add(txtSearch, BorderLayout.CENTER);
-        searchPanel.add(btnRechercher, BorderLayout.EAST);
+        btnExportPdf = createButton("📄 EXPORT PDF", new Color(139, 0, 139));
         
         // Ajout des boutons au panel
         buttonPanel.add(btnAjouter);
@@ -142,8 +134,8 @@ public class AgencePanel extends JPanel {
         buttonPanel.add(btnSupprimer);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(btnActualiser);
-        buttonPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        buttonPanel.add(searchPanel);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        buttonPanel.add(btnExportPdf);
         
         add(buttonPanel, BorderLayout.EAST);
         
@@ -152,8 +144,8 @@ public class AgencePanel extends JPanel {
         btnModifier.addActionListener(e -> activerModification());
         btnEnregistrer.addActionListener(e -> enregistrerAgence());
         btnSupprimer.addActionListener(e -> supprimerAgence());
-        btnRechercher.addActionListener(e -> chercherAgence());
         btnActualiser.addActionListener(e -> actualiserTableau());
+        btnExportPdf.addActionListener(e -> exporterEnPDF());
         
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -380,44 +372,9 @@ public class AgencePanel extends JPanel {
         }
     }
     
-    private void chercherAgence() {
-        String searchText = txtSearch.getText().trim();
-        if (searchText.isEmpty()) {
-            chargerDonnees();
-            return;
-        }
-        
-        List<Agence> resultats = agenceDAO.search(searchText);
-        model.setRowCount(0);
-        
-        if (resultats.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Aucun résultat trouvé pour : \"" + searchText + "\"",
-                "Recherche",
-                JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            for (Agence a : resultats) {
-                model.addRow(new Object[]{
-                    a.getIdAgence(),
-                    a.getNomAgence(),
-                    a.getAdresse(),
-                    a.getTelephone(),
-                    a.getEmail(),
-                    a.getIdVille()
-                });
-            }
-            
-            JOptionPane.showMessageDialog(this,
-                resultats.size() + " résultat(s) trouvé(s)",
-                "Recherche",
-                JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-    
     private void actualiserTableau() {
         chargerDonnees();
         viderChamps();
-        txtSearch.setText("");
         isEditMode = false;
         currentEditId = null;
         mettreAJourBoutons();
@@ -462,6 +419,59 @@ public class AgencePanel extends JPanel {
         };
         
         worker.execute();
+    }
+    
+    private void exporterEnPDF() {
+        List<Agence> agences = agenceDAO.findAll();
+        if (agences.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Aucune donnée à exporter",
+                "Export PDF",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Exporter en PDF");
+        fileChooser.setSelectedFile(new File("agences_export.pdf"));
+        
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String filePath = fileToSave.getAbsolutePath();
+            
+            if (!filePath.toLowerCase().endsWith(".pdf")) {
+                filePath += ".pdf";
+            }
+            
+            try {
+                PdfExporter.exportListToPdf(agences, filePath);
+                
+                JOptionPane.showMessageDialog(this,
+                    "Export PDF réussi !\nFichier : " + filePath,
+                    "Export PDF",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                // Ouvrir le fichier si demandé
+                int openFile = JOptionPane.showConfirmDialog(this,
+                    "Voulez-vous ouvrir le fichier PDF ?",
+                    "Ouvrir PDF",
+                    JOptionPane.YES_NO_OPTION);
+                
+                if (openFile == JOptionPane.YES_OPTION) {
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().open(new File(filePath));
+                    }
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this,
+                    "Erreur lors de l'export PDF : " + e.getMessage(),
+                    "Erreur Export",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
     
     private void viderChamps() {

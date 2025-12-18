@@ -2,8 +2,10 @@ package gui;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.GenericDAO;
@@ -14,10 +16,11 @@ public class SearchExplorerPanel extends JPanel {
     private JComboBox<String> tableComboBox;
     private JTextField searchField;
     private JButton searchButton;
-    private JButton exportOneButton;
-    private JButton exportAllResultsButton;
+    private JButton exportSelectedButton;
     private JButton exportWholeTableButton;
     private JButton clearButton;
+    private JButton selectAllButton;
+    private JButton deselectAllButton;
     private JTable resultsTable;
     private JScrollPane scrollPane;
     private JLabel statusLabel;
@@ -25,6 +28,8 @@ public class SearchExplorerPanel extends JPanel {
     private GenericDAO<?> currentDao;
     private List<?> currentResults;
     private Class<?> currentEntityClass;
+    private DefaultTableModel tableModel;
+    private List<Boolean> selectedRows;
 
     public SearchExplorerPanel() {
         initUI();
@@ -61,35 +66,49 @@ public class SearchExplorerPanel extends JPanel {
         clearButton.setBackground(new Color(220, 220, 220));
         controlPanel.add(clearButton);
         
-        // Panel des boutons d'export
+        // Panel des boutons de sélection
+        JPanel selectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        selectionPanel.setBorder(BorderFactory.createTitledBorder("Sélection"));
+        
+        selectAllButton = new JButton("Tout sélectionner");
+        selectAllButton.setBackground(new Color(100, 149, 237));
+        selectAllButton.setForeground(Color.WHITE);
+        
+        deselectAllButton = new JButton("Tout désélectionner");
+        deselectAllButton.setBackground(new Color(240, 128, 128));
+        deselectAllButton.setForeground(Color.WHITE);
+        
+        selectionPanel.add(selectAllButton);
+        selectionPanel.add(deselectAllButton);
+        
+        // Panel des boutons d'export (SUPPRIMÉ "Exporter tous les résultats")
         JPanel exportPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         exportPanel.setBorder(BorderFactory.createTitledBorder("Export PDF"));
         
-        exportOneButton = new JButton("Exporter la sélection");
-        exportOneButton.setBackground(new Color(46, 139, 87));
-        exportOneButton.setForeground(Color.WHITE);
-        exportAllResultsButton = new JButton("Exporter tous les résultats");
-        exportAllResultsButton.setBackground(new Color(65, 105, 225));
-        exportAllResultsButton.setForeground(Color.WHITE);
+        exportSelectedButton = new JButton("Exporter la sélection");
+        exportSelectedButton.setBackground(new Color(46, 139, 87));
+        exportSelectedButton.setForeground(Color.WHITE);
+        
         exportWholeTableButton = new JButton("Exporter toute la table");
         exportWholeTableButton.setBackground(new Color(178, 34, 34));
         exportWholeTableButton.setForeground(Color.WHITE);
         
-        exportPanel.add(exportOneButton);
-        exportPanel.add(exportAllResultsButton);
+        exportPanel.add(exportSelectedButton);
+        // SUPPRIMÉ: exportAllResultsButton
         exportPanel.add(exportWholeTableButton);
         
-        // Panel Nord qui combine les deux
-        JPanel northPanel = new JPanel(new BorderLayout());
-        northPanel.add(controlPanel, BorderLayout.NORTH);
-        northPanel.add(exportPanel, BorderLayout.SOUTH);
+        // Panel Nord qui combine les trois panels
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+        northPanel.add(controlPanel);
+        northPanel.add(selectionPanel);
+        northPanel.add(exportPanel);
         
         add(northPanel, BorderLayout.NORTH);
         
         // Tableau de résultats
         resultsTable = new JTable();
         resultsTable.setAutoCreateRowSorter(true);
-        resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         resultsTable.setRowHeight(25);
         resultsTable.setFont(new Font("Arial", Font.PLAIN, 12));
         
@@ -116,9 +135,11 @@ public class SearchExplorerPanel extends JPanel {
         // Recherche avec Enter
         searchField.addActionListener(this::performSearch);
         
-        exportOneButton.addActionListener(e -> exportSelectedRow());
-        exportAllResultsButton.addActionListener(e -> exportAllResults());
+        exportSelectedButton.addActionListener(e -> exportSelectedRows());
         exportWholeTableButton.addActionListener(e -> exportWholeTable());
+        
+        selectAllButton.addActionListener(e -> selectAllRows());
+        deselectAllButton.addActionListener(e -> deselectAllRows());
         
         // Double-clic sur une ligne
         resultsTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -143,7 +164,6 @@ public class SearchExplorerPanel extends JPanel {
             return;
         }
         
-        // Afficher un indicateur de chargement
         statusLabel.setText("Recherche en cours...");
         searchButton.setEnabled(false);
         
@@ -157,15 +177,11 @@ public class SearchExplorerPanel extends JPanel {
                     
                     SwingUtilities.invokeLater(() -> {
                         if (currentResults != null && !currentResults.isEmpty()) {
-                            DefaultTableModel model = dao.toTableModel(currentResults);
-                            resultsTable.setModel(model);
+                            updateTableModel(dao.toTableModel(currentResults));
                             statusLabel.setText("Trouvé " + currentResults.size() + " résultat(s) dans " + selectedTable);
-                            
-                            JOptionPane.showMessageDialog(SearchExplorerPanel.this, 
-                                "Trouvé " + currentResults.size() + " résultat(s)", 
-                                "Recherche", JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             resultsTable.setModel(new DefaultTableModel());
+                            selectedRows = new ArrayList<>();
                             statusLabel.setText("Aucun résultat trouvé pour: '" + searchText + "'");
                             JOptionPane.showMessageDialog(SearchExplorerPanel.this, 
                                 "Aucun résultat trouvé", 
@@ -206,11 +222,11 @@ public class SearchExplorerPanel extends JPanel {
                     
                     SwingUtilities.invokeLater(() -> {
                         if (currentResults != null && !currentResults.isEmpty()) {
-                            DefaultTableModel model = dao.toTableModel(currentResults);
-                            resultsTable.setModel(model);
+                            updateTableModel(dao.toTableModel(currentResults));
                             statusLabel.setText("Table " + selectedTable + " chargée (" + currentResults.size() + " enregistrements)");
                         } else {
                             resultsTable.setModel(new DefaultTableModel());
+                            selectedRows = new ArrayList<>();
                             statusLabel.setText("Table " + selectedTable + " est vide");
                         }
                     });
@@ -230,47 +246,88 @@ public class SearchExplorerPanel extends JPanel {
         worker.execute();
     }
 
-    private void exportSelectedRow() {
-        int selectedRow = resultsTable.getSelectedRow();
-        if (selectedRow == -1) {
+    private void updateTableModel(DefaultTableModel originalModel) {
+        // Créer un nouveau modèle avec une colonne supplémentaire pour les cases à cocher
+        String[] columnNames = new String[originalModel.getColumnCount() + 1];
+        columnNames[0] = "Sélection";
+        for (int i = 0; i < originalModel.getColumnCount(); i++) {
+            columnNames[i + 1] = originalModel.getColumnName(i);
+        }
+        
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 0) {
+                    return Boolean.class;
+                }
+                return String.class;
+            }
+            
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 0; // Seule la colonne de sélection est éditable
+            }
+        };
+        
+        // Copier les données
+        for (int i = 0; i < originalModel.getRowCount(); i++) {
+            Object[] rowData = new Object[originalModel.getColumnCount() + 1];
+            rowData[0] = false; // Case à cocher non cochée par défaut
+            for (int j = 0; j < originalModel.getColumnCount(); j++) {
+                rowData[j + 1] = originalModel.getValueAt(i, j);
+            }
+            tableModel.addRow(rowData);
+        }
+        
+        resultsTable.setModel(tableModel);
+        
+        // Initialiser la liste des sélections
+        selectedRows = new ArrayList<>();
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            selectedRows.add(false);
+        }
+        
+        // Ajouter un écouteur pour mettre à jour les sélections
+        tableModel.addTableModelListener(e -> {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            if (column == 0 && row >= 0 && row < selectedRows.size()) {
+                Boolean selected = (Boolean) tableModel.getValueAt(row, column);
+                selectedRows.set(row, selected);
+            }
+        });
+        
+        // Ajuster la largeur de la colonne de sélection
+        TableColumn checkboxColumn = resultsTable.getColumnModel().getColumn(0);
+        checkboxColumn.setPreferredWidth(60);
+        checkboxColumn.setMaxWidth(60);
+    }
+
+    private void exportSelectedRows() {
+        if (selectedRows == null || selectedRows.isEmpty() || !selectedRows.contains(true)) {
             JOptionPane.showMessageDialog(this, 
-                "Veuillez sélectionner une ligne à exporter", 
+                "Veuillez sélectionner au moins une ligne à exporter", 
                 "Avertissement", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        if (currentResults != null && selectedRow < currentResults.size()) {
-            Object entity = currentResults.get(selectedRow);
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setSelectedFile(new java.io.File(
-                currentEntityClass.getSimpleName() + "_" + (selectedRow + 1) + ".pdf"));
-            
-            int result = fileChooser.showSaveDialog(this);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                String fileName = fileChooser.getSelectedFile().getAbsolutePath();
-                if (!fileName.toLowerCase().endsWith(".pdf")) {
-                    fileName += ".pdf";
-                }
-                
-                PdfExporter.exportEntityToPdf(entity, fileName);
-                JOptionPane.showMessageDialog(this, 
-                    "Export réussi: " + fileChooser.getSelectedFile().getName(),
-                    "Export PDF", JOptionPane.INFORMATION_MESSAGE);
+        List<Object> selectedEntities = new ArrayList<>();
+        for (int i = 0; i < selectedRows.size(); i++) {
+            if (selectedRows.get(i) && i < currentResults.size()) {
+                selectedEntities.add(currentResults.get(i));
             }
         }
-    }
-
-    private void exportAllResults() {
-        if (currentResults == null || currentResults.isEmpty()) {
+        
+        if (selectedEntities.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-                "Aucun résultat à exporter", 
+                "Aucune ligne sélectionnée", 
                 "Avertissement", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setSelectedFile(new java.io.File(
-            currentEntityClass.getSimpleName() + "_resultats.pdf"));
+            currentEntityClass.getSimpleName() + "_selection.pdf"));
         
         int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -279,9 +336,9 @@ public class SearchExplorerPanel extends JPanel {
                 fileName += ".pdf";
             }
             
-            PdfExporter.exportListToPdf(currentResults, fileName);
+            PdfExporter.exportListToPdf(selectedEntities, fileName);
             JOptionPane.showMessageDialog(this, 
-                "Export réussi: " + currentResults.size() + " enregistrements exportés",
+                "Export réussi: " + selectedEntities.size() + " enregistrement(s) exporté(s)",
                 "Export PDF", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -314,6 +371,24 @@ public class SearchExplorerPanel extends JPanel {
             JOptionPane.showMessageDialog(this, 
                 "Erreur lors de l'export: " + ex.getMessage(), 
                 "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void selectAllRows() {
+        if (tableModel != null) {
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                tableModel.setValueAt(true, i, 0);
+            }
+            statusLabel.setText("Toutes les lignes sélectionnées (" + tableModel.getRowCount() + ")");
+        }
+    }
+
+    private void deselectAllRows() {
+        if (tableModel != null) {
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                tableModel.setValueAt(false, i, 0);
+            }
+            statusLabel.setText("Toutes les lignes désélectionnées");
         }
     }
 
@@ -356,7 +431,6 @@ public class SearchExplorerPanel extends JPanel {
         }
     }
     
-    // Méthode pour sélectionner une table spécifique depuis Fenetre.java
     public void setSelectedTable(String tableName) {
         for (int i = 0; i < tableComboBox.getItemCount(); i++) {
             if (tableComboBox.getItemAt(i).equals(tableName)) {
@@ -367,7 +441,6 @@ public class SearchExplorerPanel extends JPanel {
         }
     }
     
-    // Méthode pour définir le texte de recherche
     public void setSearchText(String text) {
         searchField.setText(text);
         if (!text.isEmpty()) {

@@ -9,9 +9,12 @@ import com.itextpdf.layout.properties.TextAlignment;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class PdfExporter {
+    
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     
     public static void exportListToPdf(List<?> entities, String fileName) {
         if (entities == null || entities.isEmpty()) {
@@ -54,8 +57,9 @@ public class PdfExporter {
             document.add(table);
             document.close();
             
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Erreur lors de l'export PDF: " + e.getMessage());
         }
     }
     
@@ -82,8 +86,9 @@ public class PdfExporter {
             
             document.close();
             
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Erreur lors de l'export PDF: " + e.getMessage());
         }
     }
     
@@ -96,8 +101,16 @@ public class PdfExporter {
                 return new String[]{"ID", "Nom Ville", "Code Postal"};
             case "Agence":
                 return new String[]{"ID", "Nom Agence", "Adresse", "Téléphone", "Email", "Ville ID"};
+            case "Exploitation":
+                return new String[]{"ID", "Nom Exploitation", "Type", "Superficie", "Adresse", "Ville ID", "Agence ID"};
+            case "Dirige":
+                return new String[]{"ID", "Personne ID", "Fonction", "Agence ID", "Exploitation ID", "Date Début"};
+            case "EstComptablePour":
+                return new String[]{"ID", "Personne ID", "ID Entité", "Type Entité", "Date Début"};
+            case "EstComptableDans":
+                return new String[]{"ID", "Personne ID", "Agence ID", "Poste", "Date Début"};
             default:
-                return new String[]{"ID", "Nom"};
+                return new String[]{"ID", "Valeur"};
         }
     }
     
@@ -106,19 +119,23 @@ public class PdfExporter {
             String className = entity.getClass().getSimpleName();
             switch (className) {
                 case "Personne":
-                    Method getId = entity.getClass().getMethod("getIdPersonne");
+                    Method getIdPersonne = entity.getClass().getMethod("getIdPersonne");
                     Method getNom = entity.getClass().getMethod("getNom");
                     Method getPrenom = entity.getClass().getMethod("getPrenom");
                     Method getDateNaissance = entity.getClass().getMethod("getDateNaissance");
                     Method getTelephone = entity.getClass().getMethod("getTelephone");
                     
+                    Object dateNaissance = getDateNaissance.invoke(entity);
+                    String dateStr = dateNaissance != null ? dateFormat.format(dateNaissance) : "";
+                    
                     return new String[]{
-                        String.valueOf(getId.invoke(entity)),
+                        String.valueOf(getIdPersonne.invoke(entity)),
                         (String) getNom.invoke(entity),
                         (String) getPrenom.invoke(entity),
-                        String.valueOf(getDateNaissance.invoke(entity)),
+                        dateStr,
                         (String) getTelephone.invoke(entity)
                     };
+                    
                 case "Ville":
                     Method getIdVille = entity.getClass().getMethod("getIdVille");
                     Method getNomVille = entity.getClass().getMethod("getNomVille");
@@ -129,6 +146,75 @@ public class PdfExporter {
                         (String) getNomVille.invoke(entity),
                         (String) getCodePostal.invoke(entity)
                     };
+                    
+                case "Agence":
+                    Method getIdAgence = entity.getClass().getMethod("getIdAgence");
+                    Method getNomAgence = entity.getClass().getMethod("getNomAgence");
+                    Method getAdresse = entity.getClass().getMethod("getAdresse");
+                    Method getTelephoneAgence = entity.getClass().getMethod("getTelephone");
+                    Method getEmail = entity.getClass().getMethod("getEmail");
+                    Method getIdVilleAgence = entity.getClass().getMethod("getIdVille");
+                    
+                    return new String[]{
+                        String.valueOf(getIdAgence.invoke(entity)),
+                        (String) getNomAgence.invoke(entity),
+                        (String) getAdresse.invoke(entity),
+                        (String) getTelephoneAgence.invoke(entity),
+                        (String) getEmail.invoke(entity),
+                        String.valueOf(getIdVilleAgence.invoke(entity))
+                    };
+                    
+                case "Exploitation":
+                    Method getIdExploitation = entity.getClass().getMethod("getIdExploitation");
+                    Method getNomExploitation = entity.getClass().getMethod("getNomExploitation");
+                    Method getTypeExploitation = entity.getClass().getMethod("getTypeExploitation");
+                    Method getSuperficie = entity.getClass().getMethod("getSuperficie");
+                    Method getAdresseExploitation = entity.getClass().getMethod("getAdresse");
+                    Method getIdVilleExploitation = entity.getClass().getMethod("getIdVille");
+                    Method getIdAgenceExploitation = entity.getClass().getMethod("getIdAgence");
+                    
+                    return new String[]{
+                        String.valueOf(getIdExploitation.invoke(entity)),
+                        (String) getNomExploitation.invoke(entity),
+                        (String) getTypeExploitation.invoke(entity),
+                        String.valueOf(getSuperficie.invoke(entity)),
+                        (String) getAdresseExploitation.invoke(entity),
+                        String.valueOf(getIdVilleExploitation.invoke(entity)),
+                        String.valueOf(getIdAgenceExploitation.invoke(entity))
+                    };
+                    
+                case "Dirige":
+                    Method getIdDirige = entity.getClass().getMethod("getIdDirige");
+                    Method getPersonneDirige = entity.getClass().getMethod("getPersonne");
+                    Method getFonction = entity.getClass().getMethod("getFonction");
+                    Method getAgenceDirige = entity.getClass().getMethod("getAgence");
+                    Method getExploitationDirige = entity.getClass().getMethod("getExploitation");
+                    Method getDateDebutDirige = entity.getClass().getMethod("getDateDebut");
+                    
+                    Object personne = getPersonneDirige.invoke(entity);
+                    Object agence = getAgenceDirige.invoke(entity);
+                    Object exploitation = getExploitationDirige.invoke(entity);
+                    Object dateDebut = getDateDebutDirige.invoke(entity);
+                    
+                    String personneId = personne != null ? 
+                        String.valueOf(personne.getClass().getMethod("getIdPersonne").invoke(personne)) : "";
+                    String agenceId = agence != null ? 
+                        String.valueOf(agence.getClass().getMethod("getIdAgence").invoke(agence)) : "";
+                    String exploitationId = exploitation != null ? 
+                        String.valueOf(exploitation.getClass().getMethod("getIdExploitation").invoke(exploitation)) : "";
+                    String dateDebutStr = dateDebut != null ? dateFormat.format(dateDebut) : "";
+                    
+                    return new String[]{
+                        String.valueOf(getIdDirige.invoke(entity)),
+                        personneId,
+                        (String) getFonction.invoke(entity),
+                        agenceId,
+                        exploitationId,
+                        dateDebutStr
+                    };
+                    
+                // Ajoutez les autres cas pour EstComptablePour et EstComptableDans...
+                    
                 default:
                     return new String[]{entity.toString()};
             }
@@ -136,5 +222,10 @@ public class PdfExporter {
             e.printStackTrace();
             return new String[]{};
         }
+    }
+    
+    // Méthode spécifique pour Personne (pour compatibilité)
+    public static void exportPersonnesToPdf(List<?> personnes, String fileName) {
+        exportListToPdf(personnes, fileName);
     }
 }
