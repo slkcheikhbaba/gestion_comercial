@@ -55,13 +55,17 @@ L’application est conçue pour être utilisée dans un contexte académique ou
 ## 🧩 Modélisation de la base de données
 
 ### 📘 Modèle Conceptuel de Données (MCD)
-![MCD](docs/screenshots/modele_conceptuel.png)
+![MCD](docs/screenshots/Screenshot%202026-01-07%20212420.png)
+
+---
 
 ### 📗 Modèle Logique de Données (MLD)
-![MLD](docs/screenshots/modele_logique.png)
+![MLD](docs/screenshots/Screenshot%202026-01-07%20212433.png)
 
-### 📕 Modèle Relationnel
-![MR](docs/screenshots/modele_relationnel.png)
+---
+
+### 📕 Modèle Relationnel (MR)
+![MR](docs/screenshots/Screenshot%202026-01-07%20212444.png)
 
 ---
 
