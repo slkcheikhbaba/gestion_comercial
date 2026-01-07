@@ -31,7 +31,6 @@ L’application est conçue pour être utilisée dans un contexte académique ou
 - ✔ Validation des champs (ex : email obligatoire en `@agence.mr`)
 - ✔ Messages de confirmation et d’erreur
 
-
 ---
 
 ## 🖼️ Captures d’écran de l’application
@@ -39,25 +38,30 @@ L’application est conçue pour être utilisée dans un contexte académique ou
 ### 🏠 Écran d’accueil
 ![Accueil](docs/screenshots/Screenshot%202026-01-07%20152221.png)
 
----
-
 ### 🔎 Explorateur des données
 ![Explorateur](docs/screenshots/Screenshot%202026-01-07%20152236.png)
-
----
 
 ### 👥 Gestion des personnes
 ![Gestion des personnes](docs/screenshots/Screenshot%202026-01-07%20152253.png)
 
----
-
 ### 🏢 Gestion des agences
 ![Gestion des agences](docs/screenshots/Screenshot%202026-01-07%20152348.png)
 
----
-
 ### ⚠️ Validation et confirmation des actions
 ![Validation](docs/screenshots/Screenshot%202026-01-07%20152511.png)
+
+---
+
+## 🧩 Modélisation de la base de données
+
+### 📘 Modèle Conceptuel de Données (MCD)
+![MCD](docs/screenshots/modele_conceptuel.png)
+
+### 📗 Modèle Logique de Données (MLD)
+![MLD](docs/screenshots/modele_logique.png)
+
+### 📕 Modèle Relationnel
+![MR](docs/screenshots/modele_relationnel.png)
 
 ---
 
@@ -66,20 +70,19 @@ L’application est conçue pour être utilisée dans un contexte académique ou
 ### Architecture – Schéma 1
 ![Architecture – Schéma 1](docs/screenshots/Screenshot%202026-01-07%20203008.png)
 
----
-
 ### Architecture – Schéma 2
 ![Architecture – Schéma 2](docs/screenshots/Screenshot%202026-01-07%20203022.png)
 
+---
 
-##  Technologies utilisées
+## 🛠 Technologies utilisées
 
 - **Java SE 21**
-- **Java Swing** (interface graphique)
+- **Java Swing**
 - **Hibernate ORM**
 - **PostgreSQL**
 - **Maven**
-- **iText 7** (export PDF)
+- **iText 7**
 - **Git & GitHub**
 - **Eclipse IDE**
 
