@@ -26,17 +26,17 @@ public class VillePanel extends JPanel {
         setBackground(new Color(255, 250, 240));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // TITRE
+        
         JLabel titre = new JLabel("GESTION DES VILLES", SwingConstants.CENTER);
         titre.setFont(new Font("Arial", Font.BOLD, 24));
         titre.setForeground(new Color(139, 69, 19));
         titre.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
         add(titre, BorderLayout.NORTH);
 
-        // PANEL CENTRE (Tableau)
+        
         JPanel centerPanel = new JPanel(new BorderLayout());
         
-        // Modèle de tableau
+        
         String[] colonnes = {"ID", "NOM VILLE", "CODE POSTAL"};
         model = new DefaultTableModel(colonnes, 0) {
             @Override
@@ -45,7 +45,7 @@ public class VillePanel extends JPanel {
             }
         };
         
-        // Table
+        
         table = new JTable(model);
         table.setRowHeight(30);
         table.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -55,7 +55,7 @@ public class VillePanel extends JPanel {
         table.setSelectionBackground(new Color(255, 228, 181));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        // Renderer pour l'alternance des couleurs
+        
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
@@ -81,7 +81,7 @@ public class VillePanel extends JPanel {
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         add(centerPanel, BorderLayout.CENTER);
 
-        // PANEL FORMULAIRE (Sud)
+       
         JPanel formPanel = new JPanel(new GridLayout(1, 4, 15, 15));
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createTitledBorder(
@@ -102,19 +102,19 @@ public class VillePanel extends JPanel {
         formContainer.add(formPanel, BorderLayout.CENTER);
         add(formContainer, BorderLayout.SOUTH);
 
-        // PANEL BOUTONS (Est)
+        
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
         
-        btnAjouter = createButton("➕ AJOUTER", new Color(34, 139, 34));
-        btnModifier = createButton("✏️ MODIFIER", new Color(30, 144, 255));
-        btnEnregistrer = createButton("💾 ENREGISTRER", new Color(255, 140, 0));
-        btnSupprimer = createButton("🗑️ SUPPRIMER", new Color(220, 20, 60));
-        btnActualiser = createButton("🔄 ACTUALISER", new Color(138, 43, 226));
-        btnExportPdf = createButton("📄 EXPORT PDF", new Color(139, 0, 139));
+        btnAjouter = createButton(" AJOUTER", new Color(34, 139, 34));
+        btnModifier = createButton(" MODIFIER", new Color(30, 144, 255));
+        btnEnregistrer = createButton(" ENREGISTRER", new Color(255, 140, 0));
+        btnSupprimer = createButton(" SUPPRIMER", new Color(220, 20, 60));
+        btnActualiser = createButton(" ACTUALISER", new Color(138, 43, 226));
+        btnExportPdf = createButton(" EXPORT PDF", new Color(139, 0, 139));
         
-        // Ajout des boutons au panel
+        
         buttonPanel.add(btnAjouter);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(btnModifier);
@@ -129,7 +129,7 @@ public class VillePanel extends JPanel {
         
         add(buttonPanel, BorderLayout.EAST);
         
-        // ÉCOUTEURS D'ÉVÉNEMENTS
+        
         btnAjouter.addActionListener(e -> activerAjout());
         btnModifier.addActionListener(e -> activerModification());
         btnEnregistrer.addActionListener(e -> enregistrerVille());
@@ -143,12 +143,12 @@ public class VillePanel extends JPanel {
             }
         });
         
-        // CHARGEMENT INITIAL
+        
         chargerDonnees();
         mettreAJourBoutons();
     }
     
-    // MÉTHODES AUXILIAIRES
+    
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.BOLD, 12));
@@ -181,7 +181,7 @@ public class VillePanel extends JPanel {
         return button;
     }
     
-    // MÉTHODES FONCTIONNELLES
+    
     private void activerAjout() {
         isEditMode = false;
         currentEditId = null;
@@ -220,7 +220,7 @@ public class VillePanel extends JPanel {
     
     private void enregistrerVille() {
         try {
-            // Validation des champs
+            
             String nom = txtNom.getText().trim();
             String codePostal = txtCodePostal.getText().trim();
             
@@ -232,7 +232,7 @@ public class VillePanel extends JPanel {
                 return;
             }
             
-            // Validation code postal (format numérique)
+           
             if (!codePostal.matches("\\d{5}")) {
                 JOptionPane.showMessageDialog(this,
                     "Code postal invalide !\nDoit contenir 5 chiffres.\nExemple: 75001",
@@ -242,7 +242,7 @@ public class VillePanel extends JPanel {
             }
             
             if (!isEditMode) {
-                // AJOUT
+                
                 Ville nouvelle = new Ville(nom, codePostal);
                 
                 if (villeDAO.save(nouvelle)) {
@@ -254,7 +254,7 @@ public class VillePanel extends JPanel {
                     viderChamps();
                 }
             } else {
-                // MODIFICATION
+                
                 if (currentEditId == null) {
                     JOptionPane.showMessageDialog(this,
                         "ID invalide pour la modification",
@@ -433,7 +433,7 @@ public class VillePanel extends JPanel {
                     "Export PDF",
                     JOptionPane.INFORMATION_MESSAGE);
                 
-                // Ouvrir le fichier si demandé
+                
                 int openFile = JOptionPane.showConfirmDialog(this,
                     "Voulez-vous ouvrir le fichier PDF ?",
                     "Ouvrir PDF",
@@ -483,7 +483,7 @@ public class VillePanel extends JPanel {
         }
     }
     
-    // GETTER
+    
     public List<Ville> getVilles() {
         return villeDAO.findAll();
     }

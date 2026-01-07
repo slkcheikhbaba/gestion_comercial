@@ -27,10 +27,10 @@ public class EstComptableDans {
     @Column(name = "poste")
     private String poste;
     
-    // Constructeur par défaut
+    
     public EstComptableDans() {}
 
-    // Constructeur complet (optionnel mais utile)
+    
     public EstComptableDans(Personne personne, Agence agence, Date dateDebut, String poste) {
         this.personne = personne;
         this.agence = agence;
@@ -38,7 +38,7 @@ public class EstComptableDans {
         this.poste = poste;
     }
     
-    // Getters et Setters
+    
     public Long getIdComptableDans() { return idComptableDans; }
     public void setIdComptableDans(Long idComptableDans) { this.idComptableDans = idComptableDans; }
     

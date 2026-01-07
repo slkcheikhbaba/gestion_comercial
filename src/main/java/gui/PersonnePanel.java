@@ -21,7 +21,7 @@ public class PersonnePanel extends JPanel {
     private JTable table;
     private DefaultTableModel model;
     private JTextField txtNom, txtPrenom, txtTelephone;
-    private JDateChooser dateChooser;  // Remplace JTextField txtDateNaissance
+    private JDateChooser dateChooser;  
     private JButton btnAjouter, btnModifier, btnEnregistrer, btnSupprimer, btnActualiser, btnExportPdf;
     private PersonneDAO personneDAO = new PersonneDAO();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -41,10 +41,10 @@ public class PersonnePanel extends JPanel {
         titre.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
         add(titre, BorderLayout.NORTH);
         
-        // PANEL CENTRE (Tableau)
+       
         JPanel centerPanel = new JPanel(new BorderLayout());
         
-        // Modèle de tableau
+        
         String[] colonnes = {"ID", "NOM", "PRÉNOM", "DATE NAISSANCE", "TÉLÉPHONE"};
         model = new DefaultTableModel(colonnes, 0) {
             @Override
@@ -69,7 +69,7 @@ public class PersonnePanel extends JPanel {
         table.setSelectionBackground(new Color(135, 206, 250));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        // Renderer pour les dates
+        
         table.setDefaultRenderer(Date.class, new DefaultTableCellRenderer() {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             
@@ -100,7 +100,7 @@ public class PersonnePanel extends JPanel {
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         add(centerPanel, BorderLayout.CENTER);
         
-        // PANEL FORMULAIRE (Sud)
+        
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createTitledBorder(
@@ -112,19 +112,19 @@ public class PersonnePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
         
-        // Créer le JDateChooser (calendrier)
+        
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("dd/MM/yyyy");
         dateChooser.setFont(new Font("Arial", Font.PLAIN, 12));
         dateChooser.getJCalendar().setFont(new Font("Arial", Font.PLAIN, 10));
         dateChooser.setPreferredSize(new Dimension(150, 30));
         
-        // Champs de formulaire
+        
         txtNom = createTextField();
         txtPrenom = createTextField();
         txtTelephone = createTextField();
         
-        // Nom
+        
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0.3;
@@ -134,7 +134,7 @@ public class PersonnePanel extends JPanel {
         gbc.weightx = 0.7;
         formPanel.add(txtNom, gbc);
         
-        // Prénom
+       
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0.3;
@@ -144,7 +144,7 @@ public class PersonnePanel extends JPanel {
         gbc.weightx = 0.7;
         formPanel.add(txtPrenom, gbc);
         
-        // Date de Naissance
+        
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 0.3;
@@ -154,7 +154,7 @@ public class PersonnePanel extends JPanel {
         gbc.weightx = 0.7;
         formPanel.add(dateChooser, gbc);
         
-        // Téléphone
+        
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.weightx = 0.3;
@@ -169,19 +169,19 @@ public class PersonnePanel extends JPanel {
         formContainer.add(formPanel, BorderLayout.CENTER);
         add(formContainer, BorderLayout.SOUTH);
         
-        // PANEL BOUTONS (Est)
+        
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
         
-        btnAjouter = createButton("➕ AJOUTER", new Color(34, 139, 34));
-        btnModifier = createButton("✏️ MODIFIER", new Color(30, 144, 255));
-        btnEnregistrer = createButton("💾 ENREGISTRER", new Color(255, 140, 0));
-        btnSupprimer = createButton("🗑️ SUPPRIMER", new Color(220, 20, 60));
-        btnActualiser = createButton("🔄 ACTUALISER", new Color(138, 43, 226));
-        btnExportPdf = createButton("📄 EXPORT PDF", new Color(139, 0, 139));
+        btnAjouter = createButton(" AJOUTER", new Color(34, 139, 34));
+        btnModifier = createButton(" MODIFIER", new Color(30, 144, 255));
+        btnEnregistrer = createButton(" ENREGISTRER", new Color(255, 140, 0));
+        btnSupprimer = createButton(" SUPPRIMER", new Color(220, 20, 60));
+        btnActualiser = createButton(" ACTUALISER", new Color(138, 43, 226));
+        btnExportPdf = createButton(" EXPORT PDF", new Color(139, 0, 139));
         
-        // Ajout des boutons au panel
+        
         buttonPanel.add(btnAjouter);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(btnModifier);
@@ -196,7 +196,7 @@ public class PersonnePanel extends JPanel {
         
         add(buttonPanel, BorderLayout.EAST);
         
-        // ÉCOUTEURS D'ÉVÉNEMENTS
+       
         btnAjouter.addActionListener(e -> activerAjout());
         btnModifier.addActionListener(e -> activerModification());
         btnEnregistrer.addActionListener(e -> enregistrerPersonne());
@@ -210,15 +210,15 @@ public class PersonnePanel extends JPanel {
             }
         });
         
-        // TEST HIBERNATE AU DÉMARRAGE
+        
         testHibernateConnection();
         
-        // CHARGEMENT INITIAL
+        
         chargerDonnees();
         mettreAJourBoutons();
     }
     
-    // MÉTHODES AUXILIAIRES
+   
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.BOLD, 12));
@@ -251,24 +251,24 @@ public class PersonnePanel extends JPanel {
         return button;
     }
     
-    // TEST CONNEXION HIBERNATE
+    
     private void testHibernateConnection() {
         System.out.println("\n🔍 TEST HIBERNATE DANS PERSONNEPANEL");
         System.out.println("===================================");
         
-        // Test 1: Connexion via DAO
+        
         boolean connected = personneDAO.testConnection();
         System.out.println("Connexion DAO: " + (connected ? "✅ OK" : "❌ ÉCHEC"));
         
-        // Test 2: Debug de la base
+        
         personneDAO.debugDatabase();
         
-        // Test 3: Comptage
+        
         long count = personneDAO.count();
         System.out.println("Nombre de personnes dans la base: " + count);
         
         if (count == 0) {
-            // Message d'information
+            
             JOptionPane.showMessageDialog(this,
                 "La base de données est vide.\nCliquez sur AJOUTER pour créer une nouvelle personne.",
                 "Information",
@@ -276,7 +276,7 @@ public class PersonnePanel extends JPanel {
         }
     }
     
-    // MÉTHODES FONCTIONNELLES
+    
     private void activerAjout() {
         isEditMode = false;
         currentEditId = null;
@@ -315,13 +315,12 @@ public class PersonnePanel extends JPanel {
     
     private void enregistrerPersonne() {
         try {
-            // Validation des champs
+            
             String nom = txtNom.getText().trim();
             String prenom = txtPrenom.getText().trim();
             String telephone = txtTelephone.getText().trim();
             
-            // Récupération de la date depuis JDateChooser
-            Date dateNaissance = dateChooser.getDate();
+                        Date dateNaissance = dateChooser.getDate();
             
             if (nom.isEmpty() || prenom.isEmpty() || dateNaissance == null || telephone.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
@@ -333,9 +332,9 @@ public class PersonnePanel extends JPanel {
             }
             
             if (!isEditMode) {
-                // AJOUT
+                
                 Personne nouvelle = new Personne(nom, prenom, dateNaissance, telephone);
-                System.out.println("🔵 Tentative d'ajout Hibernate: " + nouvelle.getNom() + " " + nouvelle.getPrenom());
+                System.out.println(" Tentative d'ajout Hibernate: " + nouvelle.getNom() + " " + nouvelle.getPrenom());
                 
                 if (personneDAO.save(nouvelle)) {
                     JOptionPane.showMessageDialog(this,
@@ -346,8 +345,8 @@ public class PersonnePanel extends JPanel {
                     chargerDonnees();
                     viderChamps();
                     
-                    // Debug après ajout
-                    System.out.println("✅ Ajout réussi, debug après ajout:");
+                    
+                    System.out.println("Ajout réussi, debug après ajout:");
                     personneDAO.debugDatabase();
                 } else {
                     JOptionPane.showMessageDialog(this,
@@ -356,7 +355,7 @@ public class PersonnePanel extends JPanel {
                         JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                // MODIFICATION
+                
                 if (currentEditId == null) {
                     JOptionPane.showMessageDialog(this,
                         "ID invalide pour la modification",
@@ -374,7 +373,7 @@ public class PersonnePanel extends JPanel {
                     return;
                 }
                 
-                System.out.println("🔵 Tentative de modification ID: " + currentEditId);
+                System.out.println(" Tentative de modification ID: " + currentEditId);
                 personne.setNom(nom);
                 personne.setPrenom(prenom);
                 personne.setDateNaissance(dateNaissance);
@@ -391,7 +390,7 @@ public class PersonnePanel extends JPanel {
                     currentEditId = null;
                     mettreAJourBoutons();
                     
-                    System.out.println("✅ Modification réussie");
+                    System.out.println(" Modification réussie");
                 } else {
                     JOptionPane.showMessageDialog(this,
                         "Échec de la modification",
@@ -475,7 +474,7 @@ public class PersonnePanel extends JPanel {
         currentEditId = null;
         mettreAJourBoutons();
         
-        // Debug après actualisation
+       
         personneDAO.debugDatabase();
     }
     
@@ -498,7 +497,7 @@ public class PersonnePanel extends JPanel {
                                 p.getTelephone()
                             });
                         }
-                        System.out.println("✅ " + personnes.size() + " personne(s) chargée(s) dans le tableau");
+                        System.out.println(" " + personnes.size() + " personne(s) chargée(s) dans le tableau");
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -547,13 +546,13 @@ public class PersonnePanel extends JPanel {
             File fileToSave = fileChooser.getSelectedFile();
             String filePath = fileToSave.getAbsolutePath();
             
-            // Ajouter l'extension .pdf si nécessaire
+            
             if (!filePath.toLowerCase().endsWith(".pdf")) {
                 filePath += ".pdf";
             }
             
             try {
-                // Export PDF
+                
                 PdfExporter.exportPersonnesToPdf(personnes, filePath);
                 
                 JOptionPane.showMessageDialog(this,
@@ -561,7 +560,7 @@ public class PersonnePanel extends JPanel {
                     "Export PDF",
                     JOptionPane.INFORMATION_MESSAGE);
                 
-                // Ouvrir le fichier si demandé
+                
                 int openFile = JOptionPane.showConfirmDialog(this,
                     "Voulez-vous ouvrir le fichier PDF ?",
                     "Ouvrir PDF",
@@ -587,7 +586,7 @@ public class PersonnePanel extends JPanel {
         txtNom.setText("");
         txtPrenom.setText("");
         txtTelephone.setText("");
-        dateChooser.setDate(null);  // Vider le calendrier
+        dateChooser.setDate(null);  
     }
     
     private void mettreAJourBoutons() {
@@ -612,7 +611,7 @@ public class PersonnePanel extends JPanel {
             txtPrenom.setText(model.getValueAt(row, 2).toString());
             txtTelephone.setText(model.getValueAt(row, 4).toString());
             
-            // Remplir le JDateChooser
+            
             Object dateValue = model.getValueAt(row, 3);
             if (dateValue instanceof Date) {
                 Date date = (Date) dateValue;
@@ -621,10 +620,9 @@ public class PersonnePanel extends JPanel {
         }
     }
     
-    // MÉTHODE DE TEST DIRECTE
     public void testAjoutDirect() {
-        System.out.println("\n🧪 TEST AJOUT DIRECT");
-        System.out.println("====================");
+        System.out.println("\n TEST AJOUT DIRECT");
+        
         
         Personne test = new Personne();
         test.setNom("TEST_DIRECT");
@@ -633,9 +631,9 @@ public class PersonnePanel extends JPanel {
         test.setTelephone("0000000000");
         
         if (personneDAO.save(test)) {
-            System.out.println("✅ Test ajout direct réussi, ID: " + test.getIdPersonne());
+            System.out.println(" Test ajout direct réussi, ID: " + test.getIdPersonne());
             
-            // Actualiser l'affichage
+            
             SwingUtilities.invokeLater(() -> {
                 chargerDonnees();
                 JOptionPane.showMessageDialog(this,
@@ -644,7 +642,7 @@ public class PersonnePanel extends JPanel {
                     JOptionPane.INFORMATION_MESSAGE);
             });
         } else {
-            System.err.println("❌ Test ajout direct échoué");
+            System.err.println(" Test ajout direct échoué");
             JOptionPane.showMessageDialog(this,
                 "Échec du test d'ajout Hibernate",
                 "Erreur Test",

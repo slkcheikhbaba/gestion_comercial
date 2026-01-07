@@ -26,16 +26,16 @@ public class Agence {
     @Column(name = "idville", nullable = false)
     private Long idVille;
 
-    // Constructeur par défaut
+   
     public Agence() {}
 
-    // Constructeur principal
+    
     public Agence(String nomAgence, Long idVille) {
         this.nomAgence = nomAgence;
         this.idVille = idVille;
     }
 
-    // Getters et Setters
+ 
     public Long getIdAgence() {
         return idAgence;
     }

@@ -15,7 +15,7 @@ public class GenericDAO<T> {
         this.entityClass = entityClass;
     }
 
-    // CREATE
+    
     public boolean create(T entity) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -26,12 +26,12 @@ public class GenericDAO<T> {
             session.save(entity);
             transaction.commit();
             success = true;
-            System.out.println("✅ " + entityClass.getSimpleName() + " créé avec succès");
+            System.out.println("" + entityClass.getSimpleName() + " créé avec succès");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            System.err.println("❌ Erreur création " + entityClass.getSimpleName() + ": " + e.getMessage());
+            System.err.println(" Erreur création " + entityClass.getSimpleName() + ": " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -39,7 +39,7 @@ public class GenericDAO<T> {
         return success;
     }
 
-    // READ ALL
+    
     public List<T> findAll() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<T> entities = new ArrayList<>();
@@ -47,9 +47,9 @@ public class GenericDAO<T> {
         try {
             Query<T> query = session.createQuery("FROM " + entityClass.getSimpleName(), entityClass);
             entities = query.list();
-            System.out.println("📊 " + entities.size() + " " + entityClass.getSimpleName() + "(s) trouvé(s)");
+            System.out.println(" " + entities.size() + " " + entityClass.getSimpleName() + "(s) trouvé(s)");
         } catch (Exception e) {
-            System.err.println("❌ Erreur findAll " + entityClass.getSimpleName() + ": " + e.getMessage());
+            System.err.println(" Erreur findAll " + entityClass.getSimpleName() + ": " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -57,17 +57,17 @@ public class GenericDAO<T> {
         return entities;
     }
 
-    // READ BY ID
+   
     public T findById(Object id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         T entity = null;
         try {
             entity = session.get(entityClass, id);
             if (entity != null) {
-                System.out.println("🔍 " + entityClass.getSimpleName() + " trouvé ID: " + id);
+                System.out.println(" " + entityClass.getSimpleName() + " trouvé ID: " + id);
             }
         } catch (Exception e) {
-            System.err.println("❌ Erreur findById " + entityClass.getSimpleName() + ": " + e.getMessage());
+            System.err.println(" Erreur findById " + entityClass.getSimpleName() + ": " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -75,7 +75,7 @@ public class GenericDAO<T> {
         return entity;
     }
 
-    // UPDATE
+    
     public boolean update(T entity) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -86,12 +86,12 @@ public class GenericDAO<T> {
             session.update(entity);
             transaction.commit();
             success = true;
-            System.out.println("✅ " + entityClass.getSimpleName() + " mis à jour");
+            System.out.println(" " + entityClass.getSimpleName() + " mis à jour");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            System.err.println("❌ Erreur update " + entityClass.getSimpleName() + ": " + e.getMessage());
+            System.err.println(" Erreur update " + entityClass.getSimpleName() + ": " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -99,7 +99,7 @@ public class GenericDAO<T> {
         return success;
     }
 
-    // DELETE
+    
     public boolean delete(T entity) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -110,12 +110,12 @@ public class GenericDAO<T> {
             session.delete(entity);
             transaction.commit();
             success = true;
-            System.out.println("✅ " + entityClass.getSimpleName() + " supprimé");
+            System.out.println(" " + entityClass.getSimpleName() + " supprimé");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            System.err.println("❌ Erreur delete " + entityClass.getSimpleName() + ": " + e.getMessage());
+            System.err.println(" Erreur delete " + entityClass.getSimpleName() + ": " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -123,17 +123,17 @@ public class GenericDAO<T> {
         return success;
     }
 
-    // DELETE BY ID
+    
     public boolean deleteById(Object id) {
         T entity = findById(id);
         if (entity != null) {
             return delete(entity);
         }
-        System.err.println("⚠️ " + entityClass.getSimpleName() + " ID " + id + " non trouvé pour suppression");
+        System.err.println(" " + entityClass.getSimpleName() + " ID " + id + " non trouvé pour suppression");
         return false;
     }
 
-    // SEARCH
+   
     public List<T> search(String searchText) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<T> entities = new ArrayList<>();
@@ -189,7 +189,7 @@ public class GenericDAO<T> {
         }
     }
 
-    // COUNT
+    
     public long count() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
@@ -197,14 +197,14 @@ public class GenericDAO<T> {
             Long result = query.uniqueResult();
             return result != null ? result : 0;
         } catch (Exception e) {
-            System.err.println("❌ Erreur count " + entityClass.getSimpleName() + ": " + e.getMessage());
+            System.err.println(" Erreur count " + entityClass.getSimpleName() + ": " + e.getMessage());
             return 0;
         } finally {
             session.close();
         }
     }
 
-    // TABLE MODEL
+    
     public DefaultTableModel toTableModel(List<?> list) {
         DefaultTableModel model = new DefaultTableModel(getColumnNames(), 0);
 
@@ -312,7 +312,7 @@ public class GenericDAO<T> {
                     };
             }
         } catch (Exception ex) {
-            System.err.println("❌ Erreur conversion " + entityClass.getSimpleName() + " en ligne: " + ex.getMessage());
+            System.err.println(" Erreur conversion " + entityClass.getSimpleName() + " en ligne: " + ex.getMessage());
         }
         return null;
     }
@@ -324,25 +324,25 @@ public class GenericDAO<T> {
             query.setMaxResults(1);
             return true;
         } catch (Exception e) {
-            System.err.println("❌ Erreur connexion " + entityClass.getSimpleName() + ": " + e.getMessage());
+            System.err.println(" Erreur connexion " + entityClass.getSimpleName() + ": " + e.getMessage());
             return false;
         }
     }
 
-    // MÉTHODE DE DEBUG
+   
     public void debugAll() {
         try {
             List<T> entities = findAll();
-            System.out.println("\n=== DEBUG " + entityClass.getSimpleName().toUpperCase() + " ===");
+            System.out.println("\n DEBUG " + entityClass.getSimpleName().toUpperCase() + " ");
             if (entities.isEmpty()) {
-                System.out.println("ℹ️ Aucun " + entityClass.getSimpleName() + " trouvé");
+                System.out.println(" Aucun " + entityClass.getSimpleName() + " trouvé");
             } else {
                 for (T entity : entities) {
                     System.out.println(entity.toString());
                 }
             }
             System.out.println("Total: " + entities.size() + " " + entityClass.getSimpleName() + "(s)");
-            System.out.println("===============================\n");
+            
         } catch (Exception e) {
             System.err.println("❌ Erreur debugAll " + entityClass.getSimpleName() + ": " + e.getMessage());
         }

@@ -13,7 +13,7 @@ public class Fenetre extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // ✅ Barre de menu
+        
         JMenuBar menuBar = new JMenuBar();
 
         JMenu mData = new JMenu("Données");
@@ -46,7 +46,7 @@ public class Fenetre extends JFrame {
 
         setJMenuBar(menuBar);
 
-        // ✅ Panneau principal avec onglets
+        
         JTabbedPane tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab("Accueil", createHomePanel());
@@ -60,7 +60,7 @@ public class Fenetre extends JFrame {
 
         setContentPane(tabbedPane);
 
-        // ✅ Actions des menus
+        
         miExplorer.addActionListener(e -> {
             SearchExplorerPanel explorer = new SearchExplorerPanel();
             JDialog dlg = new JDialog(this, "Explorateur des données", true);
@@ -92,7 +92,7 @@ public class Fenetre extends JFrame {
                 "• Comptables pour entités",
                 "À propos", JOptionPane.INFORMATION_MESSAGE));
 
-        // ✅ Vérifier la connexion au démarrage
+        
         checkDatabaseConnection();
     }
 
@@ -147,7 +147,7 @@ public class Fenetre extends JFrame {
         buttonPanel.add(quickAccessBtn);
         buttonPanel.add(statsBtn);
 
-        // Panel d'accueil organisé
+        
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.add(subtitleLabel, BorderLayout.NORTH);
         centerPanel.add(infoPanel, BorderLayout.CENTER);

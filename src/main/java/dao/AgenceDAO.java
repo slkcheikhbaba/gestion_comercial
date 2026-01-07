@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AgenceDAO {
 
-    // CREATE - Ajouter une agence
+    
     public boolean save(Agence agence) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -34,7 +34,7 @@ public class AgenceDAO {
         return success;
     }
 
-    // READ ALL - Récupérer toutes les agences
+    
     public List<Agence> findAll() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<Agence> agences = new ArrayList<>();
@@ -54,7 +54,7 @@ public class AgenceDAO {
         return agences;
     }
 
-    // READ BY ID
+    
     public Agence findById(Long id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Agence agence = null;
@@ -72,7 +72,7 @@ public class AgenceDAO {
         return agence;
     }
 
-    // UPDATE
+    
     public boolean update(Agence agence) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -96,7 +96,7 @@ public class AgenceDAO {
         return success;
     }
 
-    // DELETE
+    
     public boolean delete(Agence agence) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -120,7 +120,7 @@ public class AgenceDAO {
         return success;
     }
 
-    // DELETE BY ID
+    
     public boolean deleteById(Long id) {
         Agence agence = findById(id);
         if (agence != null) {
@@ -130,7 +130,7 @@ public class AgenceDAO {
         return false;
     }
 
-    // SEARCH - Rechercher des agences
+    
     public List<Agence> search(String searchText) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<Agence> agences = new ArrayList<>();
@@ -156,7 +156,7 @@ public class AgenceDAO {
         return agences;
     }
 
-    // FIND BY VILLE
+    
     public List<Agence> findByVilleId(Long idVille) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<Agence> agences = new ArrayList<>();
@@ -177,7 +177,7 @@ public class AgenceDAO {
         return agences;
     }
 
-    // COUNT
+    
     public long count() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
@@ -232,25 +232,25 @@ public class AgenceDAO {
     
     // MÉTHODE MAIN DE TEST
     public static void main(String[] args) {
-        System.out.println("🧪 TEST AGENCEDAO");
-        System.out.println("=================");
+        System.out.println(" TEST AGENCEDAO");
+        
         
         AgenceDAO dao = new AgenceDAO();
         
-        // Test connexion et comptage
-        System.out.println("\n1. 🔗 TEST CONNEXION ET COMPTAGE:");
+        
+        System.out.println("\n1.  TEST CONNEXION ET COMPTAGE:");
         long total = dao.count();
         System.out.println("Nombre total d'agences: " + total);
         
-        // Afficher toutes les agences
-        System.out.println("\n2. 📋 TEST FIND ALL:");
+        
+        System.out.println("\n2.  TEST FIND ALL:");
         dao.afficherToutesAgences();
         
-        // Test recherche
-        System.out.println("\n3. 🔍 TEST RECHERCHE:");
+        
+        System.out.println("\n3.  TEST RECHERCHE:");
         List<Agence> resultats = dao.search("central");
         System.out.println("Résultats recherche 'central': " + resultats.size());
         
-        System.out.println("\n✅ TESTS TERMINÉS");
+        System.out.println("\n TESTS TERMINÉS");
     }
 }

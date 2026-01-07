@@ -10,7 +10,7 @@ import java.util.List;
 
 public class EstComptableDansDAO {
 
-    // CREATE - Ajouter un lien comptable dans
+   
     public boolean save(EstComptableDans comptableDans) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -21,12 +21,12 @@ public class EstComptableDansDAO {
             session.save(comptableDans);
             transaction.commit();
             success = true;
-            System.out.println("✅ Lien comptable dans ajouté: " + comptableDans.getPoste());
+            System.out.println(" Lien comptable dans ajouté: " + comptableDans.getPoste());
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            System.err.println("❌ Erreur save(): " + e.getMessage());
+            System.err.println(" Erreur save(): " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -34,7 +34,7 @@ public class EstComptableDansDAO {
         return success;
     }
 
-    // READ ALL - Récupérer tous les liens
+   
     public List<EstComptableDans> findAll() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<EstComptableDans> liens = new ArrayList<>();
@@ -45,9 +45,9 @@ public class EstComptableDansDAO {
                     EstComptableDans.class
             );
             liens = query.list();
-            System.out.println("📊 " + liens.size() + " lien(s) comptable(s) dans trouvé(s)");
+            System.out.println(" " + liens.size() + " lien(s) comptable(s) dans trouvé(s)");
         } catch (Exception e) {
-            System.err.println("❌ Erreur findAll(): " + e.getMessage());
+            System.err.println(" Erreur findAll(): " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -55,17 +55,17 @@ public class EstComptableDansDAO {
         return liens;
     }
 
-    // READ BY ID - Récupérer un lien par ID
+    
     public EstComptableDans findById(Long id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         EstComptableDans lien = null;
         try {
             lien = session.get(EstComptableDans.class, id);
             if (lien != null) {
-                System.out.println("🔍 Lien comptable dans trouvé ID " + id + ": " + lien.getPoste());
+                System.out.println(" Lien comptable dans trouvé ID " + id + ": " + lien.getPoste());
             }
         } catch (Exception e) {
-            System.err.println("❌ Erreur findById(): " + e.getMessage());
+            System.err.println(" Erreur findById(): " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -73,7 +73,7 @@ public class EstComptableDansDAO {
         return lien;
     }
 
-    // UPDATE - Mettre à jour un lien
+   
     public boolean update(EstComptableDans comptableDans) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -84,12 +84,12 @@ public class EstComptableDansDAO {
             session.update(comptableDans);
             transaction.commit();
             success = true;
-            System.out.println("✅ Lien comptable dans mis à jour ID " + comptableDans.getIdComptableDans());
+            System.out.println(" Lien comptable dans mis à jour ID " + comptableDans.getIdComptableDans());
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            System.err.println("❌ Erreur update(): " + e.getMessage());
+            System.err.println(" Erreur update(): " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -97,7 +97,7 @@ public class EstComptableDansDAO {
         return success;
     }
 
-    // DELETE - Supprimer un lien
+    
     public boolean delete(EstComptableDans comptableDans) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -108,12 +108,12 @@ public class EstComptableDansDAO {
             session.delete(comptableDans);
             transaction.commit();
             success = true;
-            System.out.println("✅ Lien comptable dans supprimé ID " + comptableDans.getIdComptableDans());
+            System.out.println(" Lien comptable dans supprimé ID " + comptableDans.getIdComptableDans());
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            System.err.println("❌ Erreur delete(): " + e.getMessage());
+            System.err.println(" Erreur delete(): " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -121,17 +121,17 @@ public class EstComptableDansDAO {
         return success;
     }
 
-    // DELETE BY ID - Supprimer un lien par ID
+   
     public boolean deleteById(Long id) {
         EstComptableDans comptableDans = findById(id);
         if (comptableDans != null) {
             return delete(comptableDans);
         }
-        System.err.println("⚠️ Lien comptable dans ID " + id + " non trouvé pour suppression");
+        System.err.println(" Lien comptable dans ID " + id + " non trouvé pour suppression");
         return false;
     }
 
-    // SEARCH - Rechercher des liens
+   
     public List<EstComptableDans> search(String searchText) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<EstComptableDans> liens = new ArrayList<>();
@@ -148,9 +148,9 @@ public class EstComptableDansDAO {
             );
             query.setParameter("search", "%" + searchText + "%");
             liens = query.list();
-            System.out.println("🔎 " + liens.size() + " résultat(s) pour '" + searchText + "'");
+            System.out.println(" " + liens.size() + " résultat(s) pour '" + searchText + "'");
         } catch (Exception e) {
-            System.err.println("❌ Erreur search(): " + e.getMessage());
+            System.err.println(" Erreur search(): " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -158,7 +158,7 @@ public class EstComptableDansDAO {
         return liens;
     }
 
-    // FIND BY PERSONNE - Rechercher les liens d'une personne
+   
     public List<EstComptableDans> findByPersonneId(Long idPersonne) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<EstComptableDans> liens = new ArrayList<>();
@@ -173,7 +173,7 @@ public class EstComptableDansDAO {
             query.setParameter("idPersonne", idPersonne);
             liens = query.list();
         } catch (Exception e) {
-            System.err.println("❌ Erreur findByPersonneId(): " + e.getMessage());
+            System.err.println(" Erreur findByPersonneId(): " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -181,7 +181,7 @@ public class EstComptableDansDAO {
         return liens;
     }
 
-    // FIND BY AGENCE - Rechercher les liens d'une agence
+    
     public List<EstComptableDans> findByAgenceId(Long idAgence) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<EstComptableDans> liens = new ArrayList<>();
@@ -196,7 +196,7 @@ public class EstComptableDansDAO {
             query.setParameter("idAgence", idAgence);
             liens = query.list();
         } catch (Exception e) {
-            System.err.println("❌ Erreur findByAgenceId(): " + e.getMessage());
+            System.err.println(" Erreur findByAgenceId(): " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -204,7 +204,7 @@ public class EstComptableDansDAO {
         return liens;
     }
 
-    // FIND BY POSTE - Rechercher par poste
+   
     public List<EstComptableDans> findByPoste(String poste) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<EstComptableDans> liens = new ArrayList<>();
@@ -219,7 +219,7 @@ public class EstComptableDansDAO {
             query.setParameter("poste", "%" + poste + "%");
             liens = query.list();
         } catch (Exception e) {
-            System.err.println("❌ Erreur findByPoste(): " + e.getMessage());
+            System.err.println(" Erreur findByPoste(): " + e.getMessage());
             e.printStackTrace();
         } finally {
             session.close();
@@ -227,7 +227,7 @@ public class EstComptableDansDAO {
         return liens;
     }
 
-    // COUNT - Compter le nombre de liens
+   
     public long count() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
@@ -238,14 +238,14 @@ public class EstComptableDansDAO {
             Long result = query.uniqueResult();
             return result != null ? result : 0;
         } catch (Exception e) {
-            System.err.println("❌ Erreur count(): " + e.getMessage());
+            System.err.println(" Erreur count(): " + e.getMessage());
             return 0;
         } finally {
             session.close();
         }
     }
 
-    // AFFICHER POUR TESTS
+   
     public void afficherTousLiens() {
         try {
             List<EstComptableDans> liens = findAll();
@@ -253,10 +253,10 @@ public class EstComptableDansDAO {
             for (EstComptableDans lien : liens) {
                 System.out.println(
                         "ID: " + lien.getIdComptableDans() +
-                        " | Personne: " + (lien.getPersonne() != null ? lien.getPersonne().getNomComplet() : "N/A") +
-                        " | Agence: " + (lien.getAgence() != null ? lien.getAgence().getNomAgence() : "N/A") +
-                        " | Date Début: " + lien.getDateDebut() +
-                        " | Poste: " + lien.getPoste()
+                        "  Personne: " + (lien.getPersonne() != null ? lien.getPersonne().getNomComplet() : "N/A") +
+                        "  Agence: " + (lien.getAgence() != null ? lien.getAgence().getNomAgence() : "N/A") +
+                        "  Date Début: " + lien.getDateDebut() +
+                        "  Poste: " + lien.getPoste()
                 );
             }
             System.out.println("Total: " + liens.size() + " lien(s)");
@@ -265,27 +265,27 @@ public class EstComptableDansDAO {
         }
     }
     
-    // MÉTHODE MAIN DE TEST
+    
     public static void main(String[] args) {
-        System.out.println("🧪 TEST ESTCOMPTABLEDANSDAO");
-        System.out.println("===========================");
+        System.out.println(" TEST ESTCOMPTABLEDANSDAO");
+       
         
         EstComptableDansDAO dao = new EstComptableDansDAO();
         
-        // Test connexion et comptage
-        System.out.println("\n1. 🔗 TEST CONNEXION ET COMPTAGE:");
+       
+        System.out.println("\n1.  TEST CONNEXION ET COMPTAGE:");
         long total = dao.count();
         System.out.println("Nombre total de liens: " + total);
         
-        // Afficher tous les liens
-        System.out.println("\n2. 📋 TEST FIND ALL:");
+       
+        System.out.println("\n2.  TEST FIND ALL:");
         dao.afficherTousLiens();
         
-        // Test recherche
-        System.out.println("\n3. 🔍 TEST RECHERCHE:");
+        
+        System.out.println("\n3.  TEST RECHERCHE:");
         List<EstComptableDans> resultats = dao.search("comptable");
         System.out.println("Résultats recherche 'comptable': " + resultats.size());
         
-        System.out.println("\n✅ TESTS TERMINÉS");
+        System.out.println("\n TESTS TERMINÉS");
     }
 }

@@ -17,16 +17,16 @@ public class Ville {
     @Column(name = "codepostal", nullable = false)
     private String codePostal;
 
-    // Constructeur par défaut
+    
     public Ville() {}
 
-    // Constructeur complet
+    
     public Ville(String nomVille, String codePostal) {
         this.nomVille = nomVille;
         this.codePostal = codePostal;
     }
 
-    // Getters / Setters
+    
     public Long getIdVille() {
         return idVille;
     }

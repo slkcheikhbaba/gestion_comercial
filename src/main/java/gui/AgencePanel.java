@@ -26,17 +26,17 @@ public class AgencePanel extends JPanel {
         setBackground(new Color(245, 245, 255));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // TITRE
+        
         JLabel titre = new JLabel("GESTION DES AGENCES", SwingConstants.CENTER);
         titre.setFont(new Font("Arial", Font.BOLD, 24));
         titre.setForeground(new Color(25, 25, 112));
         titre.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
         add(titre, BorderLayout.NORTH);
 
-        // PANEL CENTRE (Tableau)
+        
         JPanel centerPanel = new JPanel(new BorderLayout());
         
-        // Modèle de tableau
+        
         String[] colonnes = {"ID", "NOM AGENCE", "ADRESSE", "TÉLÉPHONE", "EMAIL", "ID VILLE"};
         model = new DefaultTableModel(colonnes, 0) {
             @Override
@@ -45,7 +45,7 @@ public class AgencePanel extends JPanel {
             }
         };
         
-        // Table
+        
         table = new JTable(model);
         table.setRowHeight(30);
         table.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -55,7 +55,7 @@ public class AgencePanel extends JPanel {
         table.setSelectionBackground(new Color(135, 206, 250));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        // Renderer pour l'alternance des couleurs
+        
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
@@ -81,7 +81,7 @@ public class AgencePanel extends JPanel {
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         add(centerPanel, BorderLayout.CENTER);
 
-        // PANEL FORMULAIRE (Sud)
+        
         JPanel formPanel = new JPanel(new GridLayout(3, 4, 15, 15));
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createTitledBorder(
@@ -89,7 +89,7 @@ public class AgencePanel extends JPanel {
             "Informations de l'Agence"
         ));
         
-        // Champs de formulaire
+       
         txtNom = createTextField();
         txtAdresse = createTextField();
         txtTelephone = createTextField();
@@ -102,7 +102,7 @@ public class AgencePanel extends JPanel {
         formPanel.add(txtAdresse);
         formPanel.add(createLabel("Téléphone:"));
         formPanel.add(txtTelephone);
-        formPanel.add(createLabel("Email:"));
+        formPanel.add(createLabel("Email *:"));
         formPanel.add(txtEmail);
         formPanel.add(createLabel("ID Ville *:"));
         formPanel.add(txtVille);
@@ -112,7 +112,7 @@ public class AgencePanel extends JPanel {
         formContainer.add(formPanel, BorderLayout.CENTER);
         add(formContainer, BorderLayout.SOUTH);
 
-        // PANEL BOUTONS (Est)
+        
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
@@ -124,7 +124,7 @@ public class AgencePanel extends JPanel {
         btnActualiser = createButton("🔄 ACTUALISER", new Color(138, 43, 226));
         btnExportPdf = createButton("📄 EXPORT PDF", new Color(139, 0, 139));
         
-        // Ajout des boutons au panel
+       
         buttonPanel.add(btnAjouter);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(btnModifier);
@@ -139,7 +139,7 @@ public class AgencePanel extends JPanel {
         
         add(buttonPanel, BorderLayout.EAST);
         
-        // ÉCOUTEURS D'ÉVÉNEMENTS
+        
         btnAjouter.addActionListener(e -> activerAjout());
         btnModifier.addActionListener(e -> activerModification());
         btnEnregistrer.addActionListener(e -> enregistrerAgence());
@@ -153,12 +153,12 @@ public class AgencePanel extends JPanel {
             }
         });
         
-        // CHARGEMENT INITIAL
+        
         chargerDonnees();
         mettreAJourBoutons();
     }
     
-    // MÉTHODES AUXILIAIRES
+    
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.BOLD, 12));
@@ -191,7 +191,7 @@ public class AgencePanel extends JPanel {
         return button;
     }
     
-    // MÉTHODES FONCTIONNELLES
+    
     private void activerAjout() {
         isEditMode = false;
         currentEditId = null;
@@ -230,12 +230,13 @@ public class AgencePanel extends JPanel {
     
     private void enregistrerAgence() {
         try {
-            // Validation des champs
+            
             String nom = txtNom.getText().trim();
             String adresse = txtAdresse.getText().trim();
             String telephone = txtTelephone.getText().trim();
             String email = txtEmail.getText().trim();
             String villeStr = txtVille.getText().trim();
+
             
             if (nom.isEmpty() || villeStr.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
@@ -244,8 +245,27 @@ public class AgencePanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+           
+            if (email.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "L'email est obligatoire !",
+                    "Email manquant",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             
-            // Validation ID Ville
+            String emailRegex = "^[A-Za-z0-9+_.-]+@agence\\.mr$";
+            if (!email.matches(emailRegex)) {
+                JOptionPane.showMessageDialog(this,
+                    "L'email doit se terminer par @agence.mr\nExemple : contact@agence.mr",
+                    "Email invalide",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+           
             Long idVille;
             try {
                 idVille = Long.parseLong(villeStr);
@@ -256,9 +276,9 @@ public class AgencePanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             if (!isEditMode) {
-                // AJOUT
+               
                 Agence nouvelle = new Agence(nom, idVille);
                 nouvelle.setAdresse(adresse);
                 nouvelle.setTelephone(telephone);
@@ -273,7 +293,7 @@ public class AgencePanel extends JPanel {
                     viderChamps();
                 }
             } else {
-                // MODIFICATION
+                
                 if (currentEditId == null) {
                     JOptionPane.showMessageDialog(this,
                         "ID invalide pour la modification",
@@ -508,7 +528,7 @@ public class AgencePanel extends JPanel {
         }
     }
     
-    // GETTER
+   
     public List<Agence> getAgences() {
         return agenceDAO.findAll();
     }

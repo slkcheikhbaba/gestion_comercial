@@ -28,9 +28,9 @@ public class Personne implements Serializable {
     @Column(name = "telephone", length = 20)
     private String telephone;
     
-    // Constructeurs
+    
     public Personne() {
-        // Constructeur par défaut requis par JPA
+        
     }
     
     public Personne(String nom, String prenom, Date dateNaissance) {
@@ -46,7 +46,7 @@ public class Personne implements Serializable {
         this.telephone = telephone;
     }
     
-    // Getters et Setters
+    
     public Integer getIdPersonne() {
         return idPersonne;
     }
@@ -87,7 +87,7 @@ public class Personne implements Serializable {
         this.telephone = telephone;
     }
     
-    // Méthodes utilitaires
+    
     public String getNomComplet() {
         return prenom + " " + nom;
     }

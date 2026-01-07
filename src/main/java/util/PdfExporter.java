@@ -26,7 +26,7 @@ public class PdfExporter {
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
             
-            // Titre
+           
             String entityName = entities.get(0).getClass().getSimpleName();
             document.add(new Paragraph("Export: " + entityName)
                 .setTextAlignment(TextAlignment.CENTER)
@@ -35,18 +35,18 @@ public class PdfExporter {
             
             document.add(new Paragraph("\n"));
             
-            // Créer un tableau
+            
             Object firstEntity = entities.get(0);
             String[] headers = getHeaders(firstEntity);
             
             Table table = new Table(headers.length);
             
-            // En-têtes
+           
             for (String header : headers) {
                 table.addHeaderCell(new Paragraph(header).setBold());
             }
             
-            // Données
+           
             for (Object entity : entities) {
                 String[] values = getEntityValues(entity);
                 for (String value : values) {
@@ -213,7 +213,7 @@ public class PdfExporter {
                         dateDebutStr
                     };
                     
-                // Ajoutez les autres cas pour EstComptablePour et EstComptableDans...
+                
                     
                 default:
                     return new String[]{entity.toString()};
@@ -224,7 +224,7 @@ public class PdfExporter {
         }
     }
     
-    // Méthode spécifique pour Personne (pour compatibilité)
+    
     public static void exportPersonnesToPdf(List<?> personnes, String fileName) {
         exportListToPdf(personnes, fileName);
     }

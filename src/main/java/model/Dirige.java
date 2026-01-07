@@ -31,10 +31,10 @@ public class Dirige {
     @Column(name = "fonction")
     private String fonction;
     
-    // Constructeur par défaut
+    
     public Dirige() {}
 
-    // Constructeur complet (optionnel mais utile)
+    
     public Dirige(Personne personne, Agence agence, Exploitation exploitation, Date dateDebut, String fonction) {
         this.personne = personne;
         this.agence = agence;
@@ -43,7 +43,7 @@ public class Dirige {
         this.fonction = fonction;
     }
     
-    // Getters et Setters
+   
     public Long getIdDirige() { return idDirige; }
     public void setIdDirige(Long idDirige) { this.idDirige = idDirige; }
     

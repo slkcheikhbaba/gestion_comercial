@@ -39,17 +39,17 @@ public class DirigePanel extends JPanel {
         setBackground(new Color(250, 250, 255));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // TITRE
+        
         JLabel titre = new JLabel("GESTION DES DIRECTIONS", SwingConstants.CENTER);
         titre.setFont(new Font("Arial", Font.BOLD, 24));
         titre.setForeground(new Color(25, 25, 112));
         titre.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
         add(titre, BorderLayout.NORTH);
 
-        // PANEL CENTRE (Tableau)
+        
         JPanel centerPanel = new JPanel(new BorderLayout());
         
-        // Modèle de tableau
+        
         String[] colonnes = {"ID", "PERSONNE", "FONCTION", "AGENCE", "EXPLOITATION", "DATE DÉBUT"};
         model = new DefaultTableModel(colonnes, 0) {
             @Override
@@ -58,7 +58,7 @@ public class DirigePanel extends JPanel {
             }
         };
         
-        // Table
+        
         table = new JTable(model);
         table.setRowHeight(30);
         table.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -68,7 +68,7 @@ public class DirigePanel extends JPanel {
         table.setSelectionBackground(new Color(135, 206, 250));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        // Renderer pour l'alternance des couleurs
+        
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
@@ -94,7 +94,7 @@ public class DirigePanel extends JPanel {
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         add(centerPanel, BorderLayout.CENTER);
 
-        // PANEL FORMULAIRE (Sud)
+        
         JPanel formPanel = new JPanel(new GridLayout(4, 4, 15, 15));
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createTitledBorder(
@@ -102,7 +102,7 @@ public class DirigePanel extends JPanel {
             "Informations de la Direction"
         ));
         
-        // Initialiser les combobox
+        
         comboPersonne = new JComboBox<>();
         comboAgence = new JComboBox<>();
         comboExploitation = new JComboBox<>();
@@ -127,7 +127,7 @@ public class DirigePanel extends JPanel {
         formContainer.add(formPanel, BorderLayout.CENTER);
         add(formContainer, BorderLayout.SOUTH);
 
-        // PANEL BOUTONS (Est)
+        
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
@@ -139,7 +139,7 @@ public class DirigePanel extends JPanel {
         btnActualiser = createButton("🔄 ACTUALISER", new Color(138, 43, 226));
         btnExportPdf = createButton("📄 EXPORT PDF", new Color(139, 0, 139));
         
-        // Panel recherche
+        
         JPanel searchPanel = new JPanel(new BorderLayout(5, 5));
         searchPanel.setBorder(BorderFactory.createTitledBorder("Recherche"));
         searchPanel.setBackground(Color.WHITE);
@@ -151,7 +151,7 @@ public class DirigePanel extends JPanel {
         searchPanel.add(txtSearch, BorderLayout.CENTER);
         searchPanel.add(btnRechercher, BorderLayout.EAST);
         
-        // Ajout des boutons au panel
+        
         buttonPanel.add(btnAjouter);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(btnModifier);
@@ -168,7 +168,7 @@ public class DirigePanel extends JPanel {
         
         add(buttonPanel, BorderLayout.EAST);
         
-        // ÉCOUTEURS D'ÉVÉNEMENTS
+        
         btnAjouter.addActionListener(e -> activerAjout());
         btnModifier.addActionListener(e -> activerModification());
         btnEnregistrer.addActionListener(e -> enregistrerDirection());
@@ -183,12 +183,12 @@ public class DirigePanel extends JPanel {
             }
         });
         
-        // CHARGEMENT INITIAL
+        
         chargerDonnees();
         mettreAJourBoutons();
     }
     
-    // MÉTHODES AUXILIAIRES
+    
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.BOLD, 12));
@@ -232,29 +232,29 @@ public class DirigePanel extends JPanel {
         comboExploitation.addItem("-- Sélectionner une exploitation --");
         
         try {
-            // Charger personnes
+            
             List<Personne> personnes = personneDAO.findAll();
             for (Personne p : personnes) {
                 comboPersonne.addItem(p.getIdPersonne() + " - " + p.getNomComplet());
             }
             
-            // Charger agences
+            
             List<Agence> agences = agenceDAO.findAll();
             for (Agence a : agences) {
                 comboAgence.addItem(a.getIdAgence() + " - " + a.getNomAgence());
             }
             
-            // Charger exploitations
+            
             List<Exploitation> exploitations = exploitationDAO.findAll();
             for (Exploitation e : exploitations) {
                 comboExploitation.addItem(e.getIdExploitation() + " - " + e.getNomExploitation());
             }
         } catch (Exception e) {
-            System.err.println("❌ Erreur chargement combobox: " + e.getMessage());
+            System.err.println(" Erreur chargement combobox: " + e.getMessage());
         }
     }
     
-    // MÉTHODES FONCTIONNELLES
+    
     private void activerAjout() {
         isEditMode = false;
         currentEditId = null;
@@ -293,7 +293,7 @@ public class DirigePanel extends JPanel {
     
     private void enregistrerDirection() {
         try {
-            // Validation des champs
+            
             String fonction = txtFonction.getText().trim();
             String dateStr = txtDateDebut.getText().trim();
             String personneSelection = (String) comboPersonne.getSelectedItem();
@@ -307,7 +307,7 @@ public class DirigePanel extends JPanel {
                 return;
             }
             
-            // Validation date
+            
             Date dateDebut;
             try {
                 dateDebut = dateFormat.parse(dateStr);
@@ -319,7 +319,7 @@ public class DirigePanel extends JPanel {
                 return;
             }
             
-            // Récupérer IDs des combobox
+            
             Integer idPersonne = null;
             Long idAgence = null;
             Long idExploitation = null;
@@ -346,12 +346,12 @@ public class DirigePanel extends JPanel {
             }
             
             if (!isEditMode) {
-                // AJOUT
+                
                 Dirige nouvelle = new Dirige();
                 nouvelle.setFonction(fonction);
                 nouvelle.setDateDebut(dateDebut);
                 
-                // Récupérer les objets complets
+                
                 Personne personne = personneDAO.findById(idPersonne);
                 if (personne == null) {
                     JOptionPane.showMessageDialog(this,
@@ -381,7 +381,7 @@ public class DirigePanel extends JPanel {
                     viderChamps();
                 }
             } else {
-                // MODIFICATION
+                
                 if (currentEditId == null) {
                     JOptionPane.showMessageDialog(this,
                         "ID invalide pour la modification",
@@ -402,7 +402,7 @@ public class DirigePanel extends JPanel {
                 direction.setFonction(fonction);
                 direction.setDateDebut(dateDebut);
                 
-                // Mettre à jour les objets associés
+                
                 Personne personne = personneDAO.findById(idPersonne);
                 if (personne == null) {
                     JOptionPane.showMessageDialog(this,
@@ -579,7 +579,7 @@ public class DirigePanel extends JPanel {
                     "Export PDF",
                     JOptionPane.INFORMATION_MESSAGE);
                 
-                // Ouvrir le fichier si demandé
+                
                 int openFile = JOptionPane.showConfirmDialog(this,
                     "Voulez-vous ouvrir le fichier PDF ?",
                     "Ouvrir PDF",
@@ -677,8 +677,7 @@ public class DirigePanel extends JPanel {
                 txtDateDebut.setText(dateValue.toString());
             }
             
-            // TODO: Remplir les combobox avec les valeurs actuelles
-            // Ceci est plus complexe car on doit trouver l'index des items
+            
         }
     }
     

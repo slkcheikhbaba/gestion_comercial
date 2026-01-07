@@ -41,7 +41,7 @@ public class SearchExplorerPanel extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
-        // Panel de contrôle (en haut)
+        
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         controlPanel.setBorder(BorderFactory.createTitledBorder("Critères de recherche"));
         
@@ -66,7 +66,7 @@ public class SearchExplorerPanel extends JPanel {
         clearButton.setBackground(new Color(220, 220, 220));
         controlPanel.add(clearButton);
         
-        // Panel des boutons de sélection
+        
         JPanel selectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         selectionPanel.setBorder(BorderFactory.createTitledBorder("Sélection"));
         
@@ -81,7 +81,6 @@ public class SearchExplorerPanel extends JPanel {
         selectionPanel.add(selectAllButton);
         selectionPanel.add(deselectAllButton);
         
-        // Panel des boutons d'export (SUPPRIMÉ "Exporter tous les résultats")
         JPanel exportPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         exportPanel.setBorder(BorderFactory.createTitledBorder("Export PDF"));
         
@@ -94,10 +93,10 @@ public class SearchExplorerPanel extends JPanel {
         exportWholeTableButton.setForeground(Color.WHITE);
         
         exportPanel.add(exportSelectedButton);
-        // SUPPRIMÉ: exportAllResultsButton
+        
         exportPanel.add(exportWholeTableButton);
         
-        // Panel Nord qui combine les trois panels
+        
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
         northPanel.add(controlPanel);
@@ -106,7 +105,7 @@ public class SearchExplorerPanel extends JPanel {
         
         add(northPanel, BorderLayout.NORTH);
         
-        // Tableau de résultats
+        
         resultsTable = new JTable();
         resultsTable.setAutoCreateRowSorter(true);
         resultsTable.setRowHeight(25);
@@ -118,7 +117,7 @@ public class SearchExplorerPanel extends JPanel {
         
         add(scrollPane, BorderLayout.CENTER);
         
-        // Barre de statut
+        
         statusLabel = new JLabel("Prêt");
         statusLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         add(statusLabel, BorderLayout.SOUTH);
@@ -132,7 +131,7 @@ public class SearchExplorerPanel extends JPanel {
             loadWholeTable();
         });
         
-        // Recherche avec Enter
+        
         searchField.addActionListener(this::performSearch);
         
         exportSelectedButton.addActionListener(e -> exportSelectedRows());
@@ -141,7 +140,7 @@ public class SearchExplorerPanel extends JPanel {
         selectAllButton.addActionListener(e -> selectAllRows());
         deselectAllButton.addActionListener(e -> deselectAllRows());
         
-        // Double-clic sur une ligne
+        
         resultsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -247,7 +246,7 @@ public class SearchExplorerPanel extends JPanel {
     }
 
     private void updateTableModel(DefaultTableModel originalModel) {
-        // Créer un nouveau modèle avec une colonne supplémentaire pour les cases à cocher
+        
         String[] columnNames = new String[originalModel.getColumnCount() + 1];
         columnNames[0] = "Sélection";
         for (int i = 0; i < originalModel.getColumnCount(); i++) {
@@ -265,14 +264,14 @@ public class SearchExplorerPanel extends JPanel {
             
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 0; // Seule la colonne de sélection est éditable
+                return column == 0;
             }
         };
         
-        // Copier les données
+       
         for (int i = 0; i < originalModel.getRowCount(); i++) {
             Object[] rowData = new Object[originalModel.getColumnCount() + 1];
-            rowData[0] = false; // Case à cocher non cochée par défaut
+            rowData[0] = false; 
             for (int j = 0; j < originalModel.getColumnCount(); j++) {
                 rowData[j + 1] = originalModel.getValueAt(i, j);
             }
@@ -281,13 +280,13 @@ public class SearchExplorerPanel extends JPanel {
         
         resultsTable.setModel(tableModel);
         
-        // Initialiser la liste des sélections
+        
         selectedRows = new ArrayList<>();
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             selectedRows.add(false);
         }
         
-        // Ajouter un écouteur pour mettre à jour les sélections
+        
         tableModel.addTableModelListener(e -> {
             int row = e.getFirstRow();
             int column = e.getColumn();
@@ -297,7 +296,7 @@ public class SearchExplorerPanel extends JPanel {
             }
         });
         
-        // Ajuster la largeur de la colonne de sélection
+        
         TableColumn checkboxColumn = resultsTable.getColumnModel().getColumn(0);
         checkboxColumn.setPreferredWidth(60);
         checkboxColumn.setMaxWidth(60);

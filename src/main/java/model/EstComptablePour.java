@@ -26,10 +26,10 @@ public class EstComptablePour {
     @Temporal(TemporalType.DATE)
     private Date dateDebut;
     
-    // Constructeur par défaut
+    
     public EstComptablePour() {}
 
-    // Constructeur complet (optionnel mais utile)
+    
     public EstComptablePour(Personne personne, Long idEntite, String typeEntite, Date dateDebut) {
         this.personne = personne;
         this.idEntite = idEntite;
@@ -37,7 +37,7 @@ public class EstComptablePour {
         this.dateDebut = dateDebut;
     }
     
-    // Getters et Setters
+    
     public Long getIdComptablePour() { return idComptablePour; }
     public void setIdComptablePour(Long idComptablePour) { this.idComptablePour = idComptablePour; }
     

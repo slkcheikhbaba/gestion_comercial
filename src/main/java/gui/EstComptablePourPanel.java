@@ -33,17 +33,17 @@ public class EstComptablePourPanel extends JPanel {
         setBackground(new Color(240, 255, 240));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // TITRE
+        
         JLabel titre = new JLabel("COMPTABLES POUR LES ENTITÉS", SwingConstants.CENTER);
         titre.setFont(new Font("Arial", Font.BOLD, 24));
         titre.setForeground(new Color(0, 100, 0));
         titre.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
         add(titre, BorderLayout.NORTH);
 
-        // PANEL CENTRE (Tableau)
+        
         JPanel centerPanel = new JPanel(new BorderLayout());
         
-        // Modèle de tableau
+        
         String[] colonnes = {"ID", "PERSONNE", "ID ENTITÉ", "TYPE ENTITÉ", "DATE DÉBUT"};
         model = new DefaultTableModel(colonnes, 0) {
             @Override
@@ -52,7 +52,7 @@ public class EstComptablePourPanel extends JPanel {
             }
         };
         
-        // Table
+        
         table = new JTable(model);
         table.setRowHeight(30);
         table.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -62,7 +62,7 @@ public class EstComptablePourPanel extends JPanel {
         table.setSelectionBackground(new Color(144, 238, 144));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        // Renderer pour l'alternance des couleurs
+        
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
@@ -88,7 +88,7 @@ public class EstComptablePourPanel extends JPanel {
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         add(centerPanel, BorderLayout.CENTER);
 
-        // PANEL FORMULAIRE (Sud)
+        
         JPanel formPanel = new JPanel(new GridLayout(4, 4, 15, 15));
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createTitledBorder(
@@ -96,7 +96,7 @@ public class EstComptablePourPanel extends JPanel {
             "Nouveau Lien Comptable pour Entité"
         ));
         
-        // Initialiser les combobox
+        
         comboPersonne = new JComboBox<>();
         comboTypeEntite = new JComboBox<>();
         chargerComboBox();
@@ -118,19 +118,19 @@ public class EstComptablePourPanel extends JPanel {
         formContainer.add(formPanel, BorderLayout.CENTER);
         add(formContainer, BorderLayout.SOUTH);
 
-        // PANEL BOUTONS (Est)
+        
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
         
-        btnAjouter = createButton("➕ AJOUTER", new Color(34, 139, 34));
-        btnModifier = createButton("✏️ MODIFIER", new Color(30, 144, 255));
-        btnEnregistrer = createButton("💾 ENREGISTRER", new Color(255, 140, 0));
-        btnSupprimer = createButton("🗑️ SUPPRIMER", new Color(220, 20, 60));
-        btnActualiser = createButton("🔄 ACTUALISER", new Color(138, 43, 226));
-        btnExportPdf = createButton("📄 EXPORT PDF", new Color(139, 0, 139));
+        btnAjouter = createButton(" AJOUTER", new Color(34, 139, 34));
+        btnModifier = createButton(" MODIFIER", new Color(30, 144, 255));
+        btnEnregistrer = createButton(" ENREGISTRER", new Color(255, 140, 0));
+        btnSupprimer = createButton(" SUPPRIMER", new Color(220, 20, 60));
+        btnActualiser = createButton(" ACTUALISER", new Color(138, 43, 226));
+        btnExportPdf = createButton(" EXPORT PDF", new Color(139, 0, 139));
         
-        // Panel recherche
+        
         JPanel searchPanel = new JPanel(new BorderLayout(5, 5));
         searchPanel.setBorder(BorderFactory.createTitledBorder("Recherche"));
         searchPanel.setBackground(Color.WHITE);
@@ -142,7 +142,7 @@ public class EstComptablePourPanel extends JPanel {
         searchPanel.add(txtSearch, BorderLayout.CENTER);
         searchPanel.add(btnRechercher, BorderLayout.EAST);
         
-        // Ajout des boutons au panel
+       
         buttonPanel.add(btnAjouter);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         buttonPanel.add(btnModifier);
@@ -159,7 +159,7 @@ public class EstComptablePourPanel extends JPanel {
         
         add(buttonPanel, BorderLayout.EAST);
         
-        // ÉCOUTEURS D'ÉVÉNEMENTS
+        
         btnAjouter.addActionListener(e -> activerAjout());
         btnModifier.addActionListener(e -> activerModification());
         btnEnregistrer.addActionListener(e -> enregistrerLien());
@@ -174,12 +174,12 @@ public class EstComptablePourPanel extends JPanel {
             }
         });
         
-        // CHARGEMENT INITIAL
+        
         chargerDonnees();
         mettreAJourBoutons();
     }
     
-    // MÉTHODES AUXILIAIRES
+    
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.BOLD, 12));
@@ -222,7 +222,7 @@ public class EstComptablePourPanel extends JPanel {
         comboTypeEntite.addItem("Exploitation");
         
         try {
-            // Charger personnes
+            
             List<Personne> personnes = personneDAO.findAll();
             for (Personne p : personnes) {
                 comboPersonne.addItem(p.getIdPersonne() + " - " + p.getNomComplet());
@@ -232,7 +232,7 @@ public class EstComptablePourPanel extends JPanel {
         }
     }
     
-    // MÉTHODES FONCTIONNELLES
+    
     private void activerAjout() {
         isEditMode = false;
         currentEditId = null;
@@ -271,15 +271,15 @@ public class EstComptablePourPanel extends JPanel {
     
     private void enregistrerLien() {
         try {
-            // Validation des champs
+            
             String idEntiteStr = txtIdEntite.getText().trim();
             String dateStr = txtDateDebut.getText().trim();
             String personneSelection = (String) comboPersonne.getSelectedItem();
             String typeEntiteSelection = (String) comboTypeEntite.getSelectedItem();
             
             if (idEntiteStr.isEmpty() || dateStr.isEmpty() || 
-                personneSelection == null || personneSelection.equals("-- Sélectionner une personne --") ||
-                typeEntiteSelection == null || typeEntiteSelection.equals("-- Sélectionner un type --")) {
+                personneSelection == null || personneSelection.equals(" Sélectionner une personne ") ||
+                typeEntiteSelection == null || typeEntiteSelection.equals(" Sélectionner un type ")) {
                 JOptionPane.showMessageDialog(this,
                     "Tous les champs sont obligatoires !",
                     "Champs manquants",
@@ -287,7 +287,7 @@ public class EstComptablePourPanel extends JPanel {
                 return;
             }
             
-            // Validation ID Entité
+           
             Long idEntite;
             try {
                 idEntite = Long.parseLong(idEntiteStr);
@@ -299,7 +299,7 @@ public class EstComptablePourPanel extends JPanel {
                 return;
             }
             
-            // Validation date
+            
             Date dateDebut;
             try {
                 dateDebut = dateFormat.parse(dateStr);
@@ -311,7 +311,7 @@ public class EstComptablePourPanel extends JPanel {
                 return;
             }
             
-            // Récupérer ID Personne
+            
             Integer idPersonne;
             try {
                 String[] personneParts = personneSelection.split(" - ");
@@ -325,13 +325,13 @@ public class EstComptablePourPanel extends JPanel {
             }
             
             if (!isEditMode) {
-                // AJOUT
+                
                 EstComptablePour nouveau = new EstComptablePour();
                 nouveau.setIdEntite(idEntite);
                 nouveau.setTypeEntite(typeEntiteSelection);
                 nouveau.setDateDebut(dateDebut);
                 
-                // Récupérer la personne
+                
                 Personne personne = personneDAO.findById(idPersonne);
                 if (personne == null) {
                     JOptionPane.showMessageDialog(this,
@@ -351,7 +351,7 @@ public class EstComptablePourPanel extends JPanel {
                     viderChamps();
                 }
             } else {
-                // MODIFICATION
+               
                 if (currentEditId == null) {
                     JOptionPane.showMessageDialog(this,
                         "ID invalide pour la modification",
@@ -373,7 +373,7 @@ public class EstComptablePourPanel extends JPanel {
                 lien.setTypeEntite(typeEntiteSelection);
                 lien.setDateDebut(dateDebut);
                 
-                // Mettre à jour la personne
+                
                 Personne personne = personneDAO.findById(idPersonne);
                 if (personne == null) {
                     JOptionPane.showMessageDialog(this,
@@ -535,7 +535,7 @@ public class EstComptablePourPanel extends JPanel {
                     "Export PDF",
                     JOptionPane.INFORMATION_MESSAGE);
                 
-                // Ouvrir le fichier si demandé
+                
                 int openFile = JOptionPane.showConfirmDialog(this,
                     "Voulez-vous ouvrir le fichier PDF ?",
                     "Ouvrir PDF",
@@ -631,8 +631,7 @@ public class EstComptablePourPanel extends JPanel {
                 txtDateDebut.setText(dateValue.toString());
             }
             
-            // TODO: Remplir les combobox avec les valeurs actuelles
-            // Ceci est plus complexe car on doit trouver l'index des items
+           
         }
     }
     

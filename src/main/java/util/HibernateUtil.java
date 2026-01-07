@@ -12,22 +12,22 @@ public class HibernateUtil {
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             try {
-                // Configuration Hibernate
+                
                 Configuration configuration = new Configuration();
                 
-                // Paramètres de base de données
+
                 configuration.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
                 configuration.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/gestion_commerciale");
                 configuration.setProperty("hibernate.connection.username", "postgres");
                 configuration.setProperty("hibernate.connection.password", "7968");
                 
-                // Paramètres Hibernate
+             
                 configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
                 configuration.setProperty("hibernate.show_sql", "true");
                 configuration.setProperty("hibernate.format_sql", "true");
                 configuration.setProperty("hibernate.hbm2ddl.auto", "update");
                 
-                // Ajout des classes annotées
+                
                 configuration.addAnnotatedClass(model.Personne.class);
                 configuration.addAnnotatedClass(model.Ville.class);
                 configuration.addAnnotatedClass(model.Agence.class);
@@ -36,17 +36,17 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(model.EstComptablePour.class);
                 configuration.addAnnotatedClass(model.EstComptableDans.class);
                 
-                // Création de SessionFactory
+               
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties())
                     .build();
                 
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
                 
-                System.out.println("✅ Hibernate SessionFactory créée avec succès");
+                System.out.println(" Hibernate SessionFactory créée avec succès");
                 
             } catch (Exception e) {
-                System.err.println("❌ Échec création SessionFactory : " + e.getMessage());
+                System.err.println(" Échec création SessionFactory : " + e.getMessage());
                 e.printStackTrace();
                 throw new ExceptionInInitializerError(e);
             }
@@ -57,7 +57,7 @@ public class HibernateUtil {
     public static void shutdown() {
         if (sessionFactory != null) {
             sessionFactory.close();
-            System.out.println("✅ Hibernate SessionFactory fermée");
+            System.out.println(" Hibernate SessionFactory fermée");
         }
     }
 }
