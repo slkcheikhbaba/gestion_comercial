@@ -61,17 +61,16 @@ L’application est conçue pour être utilisée dans un contexte académique ou
 
 ---
 
-##  Architecture du projet (schémas)
+## 🧩 Architecture du projet (schémas)
 
-Les schémas d’architecture du projet sont disponibles dans les fichiers suivants :
-
-- 📄 Architecture – Schéma 1  
-  👉 [Screenshot 2026-01-07 203008](docs/screenshots/Screenshot%202026-01-07%20203008.png)
-
-- 📄 Architecture – Schéma 2  
-  👉 [Screenshot 2026-01-07 203022](docs/screenshots/Screenshot%202026-01-07%20203022.png)
+### Architecture – Schéma 1
+![Architecture – Schéma 1](docs/screenshots/Screenshot%202026-01-07%20203008.png)
 
 ---
+
+### Architecture – Schéma 2
+![Architecture – Schéma 2](docs/screenshots/Screenshot%202026-01-07%20203022.png)
+
 
 ##  Technologies utilisées
 
